@@ -16,7 +16,7 @@ fi
 #    docs, and this skill itself.
 while IFS= read -r f; do
   case "$f" in
-    data/blog/*.mdx | public/static/images/* | docs/* | .claude/skills/write-blog/*) ;;
+    data/blog/*.mdx | public/static/images/* | docs/* | .claude/skills/write-blog/* | app/tag-data.json) ;;
     *)
       echo "FAIL: unexpected file in diff: $f"
       fail=1

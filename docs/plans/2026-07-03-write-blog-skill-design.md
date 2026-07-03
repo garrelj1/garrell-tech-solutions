@@ -32,8 +32,9 @@ factual claim in fetched sources, and opens a PR for human review before anythin
 7. **Build check** — run the site build so malformed MDX never reaches the PR.
 8. **Security scan (hard gate)** — the repo is public; even a momentary push of a
    secret is not tolerable. Before any `git push`:
-   - The diff vs `trunk` may contain ONLY the expected new blog MDX (and, if edited,
-     the design/docs files the run created). Any other file blocks the push.
+   - The diff vs `trunk` may contain ONLY the expected new blog MDX, the auto-generated
+     `app/tag-data.json` tag index, and (if edited) the design/docs files the run
+     created. Any other file blocks the push.
    - Pattern scan of the full diff for credentials (AWS/GitHub/OpenAI/Anthropic key
      shapes, `PRIVATE KEY` blocks, `api_key=`/`token=`/`secret=` assignments, `.env`
      content, connection strings with passwords).
