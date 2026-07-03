@@ -3,5 +3,9 @@
   "csv": 1,
   "cli": 1,
   "csvlens": 1,
-  "productivity": 1
+  "productivity": 2,
+  "tailscale": 1,
+  "termux": 1,
+  "ssh": 1,
+  "swarmforge": 1
 }

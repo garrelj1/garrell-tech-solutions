@@ -1,0 +1,49 @@
+---
+title: Developing on the go with Tailscale, Termux, and a tmux Dashboard
+date: '2026-07-03'
+tags: ['tailscale', 'termux', 'ssh', 'swarmforge', 'productivity']
+draft: false
+summary: My development workflow runs almost entirely through swarm-forge, which normally means sitting at my desk to kick off specs, answer clarifying questions, and approve commands. Tailscale and Termux let me SSH in from my phone and unblock that flow from anywhere.
+---
+
+Most of my development work now runs through [swarm-forge](https://github.com/garrelj1/swarm-forge), a tool I use to coordinate several AI agents on a task. It's a good workflow, but it has one dependency I didn't love: it assumes I'm sitting at my development machine. Kicking off spec design, answering the clarifying questions an agent poses, and approving or denying the commands it wants to run all happen at that one keyboard. Step away, and the whole pipeline stalls until I get back to it.
+
+Tailscale and Termux fixed that. Now I can SSH into my main dev machine from my phone, from wherever I am, and unblock the flow without walking back to my desk.
+
+## The problem: presence-gated progress
+
+The friction wasn't the AI agents themselves. It was that three specific moments in the loop required me physically at the machine:
+
+- Kicking off a new spec design.
+- Answering a clarifying question the agent needed resolved before it could keep going.
+- Approving or denying a command before it executed.
+
+Any one of those could show up while I was away from the desk for any reason. The work didn't fail. It just sat there, waiting on me.
+
+## What Tailscale actually does
+
+[Tailscale](https://tailscale.com/kb/1151/what-is-tailscale) describes itself as "a Zero Trust identity-based connectivity platform," built on WireGuard, "the open source WireGuard protocol," which it calls "a state-of-the-art VPN protocol known for its security and performance." It creates a peer-to-peer mesh network, what Tailscale calls a tailnet, so "each device is connected to the other directly." Tailscale's docs also note that this works "across firewalls and Network Address Translation (NAT) without requiring port forwarding or complex firewall rules," which is the part that mattered most for me: no router configuration, no exposed ports on my home network, just my devices finding each other.
+
+I installed it on my dev machine and on my phone, joined both to the same tailnet, and that was effectively the entire setup. My phone can now reach my desktop the same way it reaches any other device on the tailnet, regardless of which network either one is actually sitting on.
+
+## Termux: an SSH client that lives on my phone
+
+[Termux](https://termux.dev/en/) is, in its own description, "an Android terminal emulator and Linux environment app that works directly with no rooting or setup required." That matters here for one specific reason: it ships the ability to "access remote servers using the ssh client from OpenSSH." Between Tailscale handling the network path and Termux handling the terminal and SSH client, I have everything I need to reach my dev machine from a phone in my pocket.
+
+The combination is simple in practice. Tailscale gets my phone and my desktop onto the same private network no matter where either one physically is. Termux gives me a real terminal and a real `ssh` binary to use once I'm there.
+
+## Closing the loop: a tmux dashboard for swarm-forge
+
+SSH access alone gets me a shell, but swarm-forge's loop involves watching what the Claude CLI is doing and responding to it in real time, not just running one command and disconnecting. To make that workable from a phone screen, I built a tmux dashboard, kept at `swarmforge/scripts/` in the swarm-forge repo, that lets me view and interact directly with the Claude CLI's input and output over that SSH session.
+
+That's the piece that turns "I can technically SSH in" into "I can actually keep the swarm moving." I open Termux, SSH to my dev machine over the tailnet, attach to the dashboard, and I'm looking at the same input and output I'd see sitting at my desk. I can answer a clarifying question or approve a command from my phone exactly as I would from my keyboard.
+
+## Where this leaves me
+
+None of this changes how swarm-forge itself works. It changes where I'm allowed to be when it needs me. The presence requirement used to mean real gaps in the workflow: an agent finishes a task, needs a decision, and waits because I'm not at my desk. Now the same moment gets handled from a phone, and the swarm keeps moving.
+
+## Sources
+
+- [What is Tailscale? – Tailscale Docs](https://tailscale.com/kb/1151/what-is-tailscale)
+- [Termux – Official Site](https://termux.dev/en/)
+- [swarm-forge](https://github.com/garrelj1/swarm-forge)
