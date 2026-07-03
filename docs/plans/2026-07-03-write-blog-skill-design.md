@@ -30,7 +30,18 @@ factual claim in fetched sources, and opens a PR for human review before anythin
    claim and verifies it against the evidence file. Unsupported claims are rewritten
    or cut, and the audit is recorded as a table.
 7. **Build check** — run the site build so malformed MDX never reaches the PR.
-8. **PR** — push the branch, `gh pr create` against `trunk` with the audit table and
+8. **Security scan (hard gate)** — the repo is public; even a momentary push of a
+   secret is not tolerable. Before any `git push`:
+   - The diff vs `trunk` may contain ONLY the expected new blog MDX (and, if edited,
+     the design/docs files the run created). Any other file blocks the push.
+   - Pattern scan of the full diff for credentials (AWS/GitHub/OpenAI/Anthropic key
+     shapes, `PRIVATE KEY` blocks, `api_key=`/`token=`/`secret=` assignments, `.env`
+     content, connection strings with passwords).
+   - Use `gitleaks` on the diff when installed.
+   - A read-through of the complete diff for anything sensitive that patterns miss
+     (internal URLs, private repo names beyond the brief, personal data).
+   - Any hit → do not push; report to Jeremy and wait.
+9. **PR** — push the branch, `gh pr create` against `trunk` with the audit table and
    disclosure list in the body.
 
 ## Anti-hallucination rules
