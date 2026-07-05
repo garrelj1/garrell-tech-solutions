@@ -37,6 +37,10 @@ gate passes. Even a momentary push of a secret is not tolerable.
      setup), and the angle he wants.
    - update mode: which repo, and exactly what may be disclosed. Treat the answer as
      a whitelist — anything not listed stays private.
+   - both modes: the target keyword or search intent (what would someone type into
+     Google to want this post) and, if relevant, which garrellts.com service page
+     the post should support. No clear intent → pick the most natural one and confirm
+     with Jeremy rather than skipping it.
 3. **Branch** — `git checkout -b blog/<slug> origin/trunk`.
 4. **Research → evidence file** — log every source to `evidence-<slug>.md` in the
    scratchpad: URL, access date, exact excerpts relied on. Tiers:
@@ -52,7 +56,10 @@ gate passes. Even a momentary push of a secret is not tolerable.
 5. **Draft** — `data/blog/<slug>.mdx`. Frontmatter matches existing posts
    (`title`, `date`, `tags`, `draft: false`, `summary`). Inline link per sourced
    fact; `## Sources` list at the end. `draft: false` is correct — the PR is the
-   review gate.
+   review gate. Include at least one inline link to the garrellts.com service page
+   identified in the brief, placed where it reads naturally — never bolted on or
+   forced. No relevant service page exists → skip and note that in the PR summary
+   rather than inventing a link.
 6. **Claims audit** — dispatch a fresh subagent (Agent tool) given ONLY the draft,
    the evidence file, and the brief — no drafting context. It returns a table:
    claim → type (sourced / experience / opinion) → evidence or brief reference →
