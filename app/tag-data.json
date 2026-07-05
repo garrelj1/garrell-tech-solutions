@@ -4,8 +4,11 @@
   "cli": 1,
   "csvlens": 1,
   "productivity": 2,
+  "legal-tech": 1,
+  "courtlistener": 1,
+  "nextjs": 1,
+  "swarmforge": 2,
   "tailscale": 1,
   "termux": 1,
-  "ssh": 1,
-  "swarmforge": 1
+  "ssh": 1
 }

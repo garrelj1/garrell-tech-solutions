@@ -1,0 +1,40 @@
+---
+title: "Layman's Lawyer: Tracking a Court Case Without a Law Degree or a PACER Account"
+date: '2026-07-05'
+tags: ['legal-tech', 'courtlistener', 'nextjs', 'swarmforge']
+draft: false
+summary: I've always wanted a plain-language timeline of a court case, something you could drill into proceeding by proceeding without needing PACER access or a law degree to parse it. Layman's Lawyer is my attempt at building that, pulling docket data from CourtListener into a searchable, trackable view.
+---
+
+I've always wanted a layman's timeline for court proceedings: an overall view of a case that you could drill into, proceeding by proceeding and document by document, to follow the back-and-forth as it happens. That's the itch behind [Layman's Lawyer](https://github.com/garrelj1/laymans-lawyer), a project I've been building to search and track U.S. federal court cases without needing a PACER account or a law degree. That timeline view is the goal, not something the app does yet; more on where it actually stands below.
+
+## Why federal case data is hard to get to
+
+Federal court records live in PACER, the judiciary's Public Access to Court Electronic Records system. PACER charges [$0.10 per page](https://pacer.uscourts.gov/pacer-pricing-how-fees-work), capped at $3 per document, and fees are waived entirely if your quarterly total stays at $30 or under. So cost alone isn't the main barrier for someone just trying to follow a case. Needing a PACER account and a law degree to make sense of what you get back is the barrier I set out to remove.
+
+[CourtListener](https://wiki.free.law/c/courtlistener/help/api/rest/v4/overview), a Free Law Project platform, addresses part of that gap. Its RECAP archive holds "almost half a billion PACER-related items ... including dockets, entries, documents, parties, and attorneys," built up since 2009, and exposes it through a public API. That's the data source Layman's Lawyer is built on. What it doesn't do is translate any of that into plain language, which is the piece I actually want.
+
+## What the project does today
+
+Layman's Lawyer is a [Next.js 15](https://nextjs.org) app that queries CourtListener's docket endpoint, stores matching cases, docket entries, and documents in Supabase, and surfaces them through a search UI. Today that means you can search for a federal case and pull its docket into the app for tracking. The data model already has a place for plain-language summaries of individual docket entries and documents, that's the "layman" part of the name, but the summarization step itself isn't built yet, and neither is the timeline/drill-down view I described above. Right now you get search and a stored docket, not the translated, browsable version.
+
+It's Stripe-backed for subscription billing and was scaffolded from [next-supabase-stripe-starter](https://github.com/kolbysisk/next-supabase-stripe-starter), which describes itself as "the highest quality SaaS starter with Next.js, Supabase, Stripe, and shadcn/ui." The repo itself started life as an unrelated call-center SaaS idea back in January before I repurposed it for this in December, so some of the earliest commits are cleanup: removing old deploy links, updating a deprecated Supabase client pattern, patching a Next.js React Server Components RCE vulnerability. The actual CourtListener integration, docket search, and a basic admin dashboard showed up in mid-December.
+
+## Building it with swarm-forge
+
+Most of the recent work on Layman's Lawyer went through [swarm-forge](https://github.com/garrelj1/swarm-forge), the multi-agent workflow I've written about before. The commit history shows the pattern clearly: a cleaner extracting duplicated logic, an architect reviewing the resulting structure, a hardener adding tests, and a QA role merging it all. One pass took every function flagged for high CRAP score (a complexity-vs-test-coverage metric) in the docket integration code and brought it down from 8-14 to 6 or under, re-verified with a 100 percent mutation kill rate on every file it touched. Another introduced a logging abstraction so the docket use case stopped calling `console.*` directly, removed an `any` escape hatch on the CourtListener types, and added property-based tests (via fast-check) to lock down invariants like date round-tripping in the docket transform functions.
+
+That process is also why the project carries its own quality tooling: scripts for CRAP scoring, duplication detection, and mutation-test coverage, backed by [Stryker](https://stryker-mutator.io) at a 90% mutation-score threshold. None of that is specific to legal data, it's just what falls out of running a multi-agent review loop on a real codebase over several sessions.
+
+## What's still missing
+
+The marketing page is still starter-template placeholder copy, and the plain-language summarization layer, the part that actually makes this useful to a layman rather than just a docket viewer with a nicer UI, hasn't been built. Search and tracking work today; turning a docket entry into something a non-lawyer can read at a glance is next.
+
+## Sources
+
+- [Layman's Lawyer repository](https://github.com/garrelj1/laymans-lawyer) (private)
+- [CourtListener REST API v4 overview](https://wiki.free.law/c/courtlistener/help/api/rest/v4/overview)
+- [PACER fees](https://pacer.uscourts.gov/pacer-pricing-how-fees-work)
+- [next-supabase-stripe-starter](https://github.com/kolbysisk/next-supabase-stripe-starter)
+- [swarm-forge](https://github.com/garrelj1/swarm-forge)
+- [Stryker mutation testing](https://stryker-mutator.io)
