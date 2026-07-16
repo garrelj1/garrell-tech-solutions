@@ -12,6 +12,7 @@ const jsonLd = {
   name: 'Garrell Tech Solutions LLC',
   url: 'https://garrellts.com',
   logo: 'https://garrellts.com/static/images/gts-logo-full-color.png',
+  foundingDate: '2024-11',
   description:
     'Custom software development and cloud engineering for federal primes and agencies, from cloud back-end to tactical edge.',
   email: 'jeremy@garrellts.com',
@@ -30,35 +31,48 @@ const jsonLd = {
   sameAs: ['https://www.linkedin.com/company/107989162/'],
 }
 
-const NAVY = 'text-[#1F3864] dark:text-[#93AFDA]'
-const NAVY_BORDER = 'border-[#1F3864]/30 dark:border-[#93AFDA]/30'
-const NAVY_RULE = 'bg-[#1F3864]/40 dark:bg-[#93AFDA]/40'
+const PRIMARY = 'text-primary-800 dark:text-primary-300'
+const PRIMARY_BORDER = 'border-primary-800/30 dark:border-primary-300/30'
 
 function SectionHeading({ children, id }: { children: React.ReactNode; id: string }) {
   return (
     <div className="mb-8">
-      <h2 id={id} className={`text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm ${NAVY}`}>
+      <h2
+        id={id}
+        className={`text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm ${PRIMARY}`}
+      >
         {children}
       </h2>
-      <div className={`mt-3 h-px w-12 ${NAVY_RULE}`} />
+      <div className="bg-gold mt-3 h-px w-12" />
     </div>
   )
 }
 
-function StatBlock({ value, label }: { value: string; label: string }) {
+function MintPanel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-6 sm:p-8 dark:bg-gray-900">
+      {children}
+    </div>
+  )
+}
+
+function StatBlock({ value, suffix, label }: { value: string; suffix?: string; label: string }) {
   return (
     <div className="text-center">
-      <div className="text-3xl font-bold text-white sm:text-4xl">{value}</div>
-      <div className="mt-1 text-xs text-white/80 sm:text-sm">{label}</div>
+      <div className="text-primary-800 text-3xl font-bold sm:text-4xl">
+        {value}
+        {suffix && <span className="text-gold">{suffix}</span>}
+      </div>
+      <div className="text-primary-800/70 mt-1 text-xs sm:text-sm">{label}</div>
     </div>
   )
 }
 
 function DifferentiatorItem({ lead, body }: { lead: string; body: string }) {
   return (
-    <li className={`border-l-2 pl-4 ${NAVY_BORDER}`}>
+    <li className="border-gold/70 border-l-2 pl-4">
       <span className="font-semibold text-gray-900 dark:text-gray-100">{lead}</span>{' '}
-      <span className="text-gray-600 dark:text-gray-400">{body}</span>
+      <span className="text-gray-700 dark:text-gray-300">{body}</span>
     </li>
   )
 }
@@ -96,7 +110,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section aria-labelledby="hero-heading" className="pt-8 pb-12 sm:pt-12 sm:pb-16">
-        <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${NAVY}`}>
+        <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
           Custom Software · Strategic Growth
         </p>
         <h1
@@ -112,13 +126,13 @@ export default function HomePage() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href="mailto:jeremy@garrellts.com"
-            className="inline-block rounded-md bg-[#1F3864] px-6 py-3 text-center font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#16264a]"
+            className="bg-primary-800 hover:bg-primary-900 inline-block rounded-md px-6 py-3 text-center font-semibold text-white shadow-sm transition-colors duration-200"
           >
             jeremy@garrellts.com
           </a>
           <a
             href="tel:+12014007782"
-            className={`inline-block rounded-md border px-6 py-3 text-center font-semibold ${NAVY_BORDER} ${NAVY} transition-colors duration-200 hover:bg-[#1F3864]/5 dark:hover:bg-[#93AFDA]/10`}
+            className={`hover:bg-primary-800/5 dark:hover:bg-primary-300/10 inline-block rounded-md border px-6 py-3 text-center font-semibold transition-colors duration-200 ${PRIMARY_BORDER} ${PRIMARY}`}
           >
             (201) 400-7782
           </a>
@@ -128,14 +142,17 @@ export default function HomePage() {
       {/* Key stats band */}
       <section
         aria-label="Key figures"
-        className="-mx-4 bg-[#1F3864] px-4 py-10 sm:mx-0 sm:rounded-lg sm:px-10"
+        className="bg-mint -mx-4 px-4 py-10 sm:mx-0 sm:rounded-lg sm:px-10"
       >
+        <p className="text-primary-800/70 mb-6 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
+          Principal&rsquo;s Track Record
+        </p>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
-          <StatBlock value="10+" label="Years of federal software delivery" />
+          <StatBlock value="10" suffix="+" label="Years of federal software delivery" />
           <StatBlock value="3" label="Federal customers — FBI · Army · USMC" />
           <StatBlock value="3" label="Legacy systems modernized" />
-          <StatBlock value="150+" label="Businesses served on Callpurity SaaS" />
-          <StatBlock value="1M+" label="Records managed across 50 states" />
+          <StatBlock value="150" suffix="+" label="Businesses served on Callpurity SaaS" />
+          <StatBlock value="1M" suffix="+" label="Records managed across 50 states" />
         </div>
       </section>
 
@@ -143,12 +160,13 @@ export default function HomePage() {
       <section aria-labelledby="overview-heading" className="py-14">
         <SectionHeading id="overview-heading">Company Overview</SectionHeading>
         <p className="max-w-3xl text-lg leading-8 text-gray-600 dark:text-gray-400">
-          Over a decade of hands-on delivery across defense and federal law-enforcement programs
-          backs this up. The firm modernizes legacy systems and retires costly licenses (on-prem ETL
-          → AWS GovCloud; Micro Focus IDOL → OpenSearch), delivers as a single vendor from cloud
-          back-end to embedded tactical edge, and applies product-owner discipline that turns
-          stakeholder needs into shipped software. Proven on the FBI CJIS mission in 2022–2024 and
-          brought back to it in 2025.
+          Founded in November 2024, Garrell Tech Solutions LLC is built around a decade of hands-on
+          delivery its principal has logged across defense and federal law-enforcement programs. The
+          firm modernizes legacy systems and retires costly licenses (on-prem ETL → AWS GovCloud;
+          Micro Focus IDOL → OpenSearch), delivers as a single vendor from cloud back-end to
+          embedded tactical edge, and applies product-owner discipline that turns stakeholder needs
+          into shipped software. Proven on the FBI CJIS mission in 2022–2024 and brought back to it
+          in 2025.
         </p>
       </section>
 
@@ -170,28 +188,30 @@ export default function HomePage() {
       {/* Differentiators */}
       <section aria-labelledby="differentiators-heading" className="py-14">
         <SectionHeading id="differentiators-heading">Differentiators</SectionHeading>
-        <ul className="grid gap-6 sm:grid-cols-2">
-          <DifferentiatorItem
-            lead="Lower delivery risk —"
-            body="proven on the FBI CJIS mission (2022–2024) and brought back to it in 2025."
-          />
-          <DifferentiatorItem
-            lead="One vendor, cloud to edge —"
-            body="AWS / GovCloud back-end through embedded tactical software; fewer integration seams."
-          />
-          <DifferentiatorItem
-            lead="Modernization that cuts cost —"
-            body="retires legacy systems & licenses (on-prem ETL → GovCloud; IDOL → OpenSearch)."
-          />
-          <DifferentiatorItem
-            lead="Senior talent, small-business rates —"
-            body="principal-level delivery without integrator overhead."
-          />
-          <DifferentiatorItem
-            lead="Product-owner discipline —"
-            body="turns stakeholder needs into shipped products, cutting requirements-translation overhead."
-          />
-        </ul>
+        <MintPanel>
+          <ul className="grid gap-6 sm:grid-cols-2">
+            <DifferentiatorItem
+              lead="Lower delivery risk —"
+              body="proven on the FBI CJIS mission (2022–2024) and brought back to it in 2025."
+            />
+            <DifferentiatorItem
+              lead="One vendor, cloud to edge —"
+              body="AWS / GovCloud back-end through embedded tactical software; fewer integration seams."
+            />
+            <DifferentiatorItem
+              lead="Modernization that cuts cost —"
+              body="retires legacy systems & licenses (on-prem ETL → GovCloud; IDOL → OpenSearch)."
+            />
+            <DifferentiatorItem
+              lead="Senior talent, small-business rates —"
+              body="principal-level delivery without integrator overhead."
+            />
+            <DifferentiatorItem
+              lead="Product-owner discipline —"
+              body="turns stakeholder needs into shipped products, cutting requirements-translation overhead."
+            />
+          </ul>
+        </MintPanel>
       </section>
 
       {/* Program experience */}
@@ -209,8 +229,8 @@ export default function HomePage() {
           />
           <EngagementItem
             title="Callpurity — B2B SaaS Platform"
-            meta="Chief Technology Officer"
-            body="As CTO, led a 7-person team (four engineers, a designer, two contractors) building a B2B SaaS platform serving 150+ business customers and hundreds of users, with 1M+ phone numbers under management across all 50 states."
+            meta="Fractional CTO, contractor engagement via GTS · Current"
+            body="Serving as contractor CTO, leading a 7-person team (four engineers, a designer, two contractors) building a B2B SaaS platform serving 150+ business customers and hundreds of users, with 1M+ phone numbers under management across all 50 states."
           />
         </div>
 
@@ -226,7 +246,7 @@ export default function HomePage() {
           ].map((name) => (
             <div
               key={name}
-              className={`rounded-md border p-4 text-center text-sm font-medium text-gray-700 ${NAVY_BORDER} dark:text-gray-300`}
+              className={`rounded-md border p-4 text-center text-sm font-medium text-gray-700 dark:text-gray-300 ${PRIMARY_BORDER}`}
             >
               {name}
             </div>
@@ -301,56 +321,59 @@ export default function HomePage() {
       {/* Company data */}
       <section aria-labelledby="company-data-heading" className="py-14">
         <SectionHeading id="company-data-heading">Company Data</SectionHeading>
-        <dl className="divide-y divide-gray-200 dark:divide-gray-700">
-          <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
-          <CompanyDataRow label="UEI" value="GG32V7Y6B1A2" />
-          <CompanyDataRow label="CAGE / NCAGE" value="20E53" />
-          <CompanyDataRow
-            label="NAICS Codes"
-            value={
-              <ul className="space-y-1">
-                <li>541511 · Custom Computer Programming</li>
-                <li>541512 · Computer Systems Design</li>
-                <li>541519 · Other Computer Related Services</li>
-              </ul>
-            }
-          />
-          <CompanyDataRow label="Certifications" value="Small Business (SB)" />
-          <CompanyDataRow label="Delivery Model" value="Remote — nationwide, all 50 states" />
-        </dl>
+        <MintPanel>
+          <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
+            <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
+            <CompanyDataRow label="Founded" value="November 2024" />
+            <CompanyDataRow label="UEI" value="GG32V7Y6B1A2" />
+            <CompanyDataRow label="CAGE / NCAGE" value="20E53" />
+            <CompanyDataRow
+              label="NAICS Codes"
+              value={
+                <ul className="space-y-1">
+                  <li>541511 · Custom Computer Programming</li>
+                  <li>541512 · Computer Systems Design</li>
+                  <li>541519 · Other Computer Related Services</li>
+                </ul>
+              }
+            />
+            <CompanyDataRow label="Certifications" value="Small Business (SB)" />
+            <CompanyDataRow label="Delivery Model" value="Remote — nationwide, all 50 states" />
+          </dl>
+        </MintPanel>
       </section>
 
       {/* Contact */}
       <section aria-labelledby="contact-heading" className="py-14">
         <SectionHeading id="contact-heading">Contact</SectionHeading>
-        <div className="max-w-md">
-          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">Jeremy Garrell</p>
-          <p className="text-gray-500 dark:text-gray-400">Founder & Principal Engineer</p>
-          <dl className="mt-4 space-y-2 text-gray-700 dark:text-gray-300">
+        <div className="bg-primary-800 dark:bg-primary-900 max-w-md rounded-lg p-8 text-white">
+          <p className="text-lg font-semibold">Jeremy Garrell</p>
+          <p className="text-white/70">Founder & Principal Engineer</p>
+          <dl className="mt-4 space-y-2">
             <div className="flex gap-2">
-              <dt className="text-gray-500 dark:text-gray-400">Email</dt>
+              <dt className="text-white/70">Email</dt>
               <dd>
-                <a href="mailto:jeremy@garrellts.com" className={`hover:underline ${NAVY}`}>
+                <a href="mailto:jeremy@garrellts.com" className="hover:text-gold hover:underline">
                   jeremy@garrellts.com
                 </a>
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-500 dark:text-gray-400">Phone</dt>
+              <dt className="text-white/70">Phone</dt>
               <dd>
-                <a href="tel:+12014007782" className={`hover:underline ${NAVY}`}>
+                <a href="tel:+12014007782" className="hover:text-gold hover:underline">
                   (201) 400-7782
                 </a>
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-500 dark:text-gray-400">Location</dt>
+              <dt className="text-white/70">Location</dt>
               <dd>Coral Springs, FL 33065</dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-500 dark:text-gray-400">Web</dt>
+              <dt className="text-white/70">Web</dt>
               <dd>
-                <a href="https://garrellts.com" className={`hover:underline ${NAVY}`}>
+                <a href="https://garrellts.com" className="hover:text-gold hover:underline">
                   garrellts.com
                 </a>
               </dd>
