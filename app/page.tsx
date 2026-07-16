@@ -48,9 +48,17 @@ function SectionHeading({ children, id }: { children: React.ReactNode; id: strin
   )
 }
 
-function MintPanel({ children }: { children: React.ReactNode }) {
+function MintPanel({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
   return (
-    <div className="bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-5 sm:p-6 dark:bg-gray-900">
+    <div
+      className={`bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-5 sm:p-6 dark:bg-gray-900 ${className}`}
+    >
       {children}
     </div>
   )
@@ -59,11 +67,13 @@ function MintPanel({ children }: { children: React.ReactNode }) {
 function StatBlock({ value, suffix, label }: { value: string; suffix?: string; label: string }) {
   return (
     <div className="text-center">
-      <div className="text-primary-800 text-3xl font-bold sm:text-4xl">
+      <div className="text-primary-800 dark:text-primary-300 text-3xl font-bold sm:text-4xl">
         {value}
         {suffix && <span className="text-gold">{suffix}</span>}
       </div>
-      <div className="text-primary-800/70 mt-1 text-xs sm:text-sm">{label}</div>
+      <div className="text-primary-800/70 dark:text-primary-300/70 mt-1 text-xs sm:text-sm">
+        {label}
+      </div>
     </div>
   )
 }
@@ -191,40 +201,33 @@ export default function HomePage() {
 
       <div className="xl:mx-[-4rem] xl:w-[calc(100%+8rem)]">
         {/* Hero */}
-        <section aria-labelledby="hero-heading" className="relative pt-6 pb-8 sm:pt-8 sm:pb-32">
-          <div>
-            <p
-              className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}
-            >
-              Custom Software · Strategic Growth
-            </p>
-            <h1
-              id="hero-heading"
-              className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
-            >
-              Garrell Tech Solutions LLC
-            </h1>
-          </div>
-          <div
-            className={`mt-4 rounded-lg border bg-white p-4 text-sm shadow-sm sm:absolute sm:right-0 sm:bottom-0 sm:mt-0 dark:bg-gray-950 ${PRIMARY_BORDER}`}
+        <section aria-labelledby="hero-heading" className="pt-6 pb-8 sm:pt-8 sm:pb-10">
+          <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
+            Custom Software · Strategic Growth
+          </p>
+          <h1
+            id="hero-heading"
+            className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
           >
+            Garrell Tech Solutions LLC
+          </h1>
+          <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <a
               href="mailto:jeremy@garrellts.com"
-              className={`block font-semibold hover:underline ${PRIMARY}`}
+              className={`font-semibold hover:underline ${PRIMARY}`}
             >
               jeremy@garrellts.com
             </a>
-            <a
-              href="tel:+12014007782"
-              className="mt-1 block text-gray-600 hover:underline dark:text-gray-400"
-            >
+            <span className="text-gray-300 dark:text-gray-700">·</span>
+            <a href="tel:+12014007782" className="text-gray-600 hover:underline dark:text-gray-400">
               (201) 400-7782
             </a>
+            <span className="text-gray-300 dark:text-gray-700">·</span>
             <a
               href="https://calendly.com/jeremy-garrell/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gold mt-2 inline-block text-xs font-semibold tracking-wide uppercase hover:underline"
+              className="text-gold font-semibold hover:underline"
             >
               Book a 30-min call →
             </a>
@@ -255,9 +258,9 @@ export default function HomePage() {
         {/* Key stats band */}
         <section
           aria-label="Key figures"
-          className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10"
+          className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10 dark:bg-gray-900"
         >
-          <p className="text-primary-800/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
+          <p className="text-primary-800/70 dark:text-primary-300/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
             Track Record
           </p>
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
@@ -414,9 +417,9 @@ export default function HomePage() {
 
         {/* Company data & contact */}
         <div className="grid gap-8 py-8 lg:grid-cols-2">
-          <section aria-labelledby="company-data-heading">
+          <section aria-labelledby="company-data-heading" className="flex flex-col">
             <SectionHeading id="company-data-heading">Company Data</SectionHeading>
-            <MintPanel>
+            <MintPanel className="flex-1">
               <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
                 <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
                 <CompanyDataRow label="Founded" value="November 2024" />
@@ -438,9 +441,9 @@ export default function HomePage() {
             </MintPanel>
           </section>
 
-          <section aria-labelledby="contact-heading">
+          <section aria-labelledby="contact-heading" className="flex flex-col">
             <SectionHeading id="contact-heading">Contact</SectionHeading>
-            <div className="bg-primary-800 dark:bg-primary-900 rounded-lg p-6 text-white">
+            <div className="bg-primary-800 dark:bg-primary-900 flex flex-1 flex-col rounded-lg p-6 text-white">
               <p className="text-lg font-semibold">Jeremy Garrell</p>
               <p className="text-white/70">Founder & Principal Engineer</p>
               <dl className="mt-3 space-y-1.5">
@@ -480,7 +483,7 @@ export default function HomePage() {
                 href="https://calendly.com/jeremy-garrell/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200"
+                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block self-start rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200 lg:mt-auto"
               >
                 Book a 30-Minute Call
               </a>
