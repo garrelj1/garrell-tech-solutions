@@ -187,7 +187,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="xl:w-6xl">
+      <div className="xl:mx-[-4rem] xl:w-[calc(100%+8rem)]">
         {/* Hero */}
         <section
           aria-labelledby="hero-heading"
