@@ -123,9 +123,11 @@ const ShieldIcon = () => (
   </IconBase>
 )
 
-const InstitutionIcon = () => (
+const GavelIcon = () => (
   <IconBase>
-    <path d="M4 10l8-6 8 6M5 10v10h14V10M9 20v-6h6v6" />
+    <rect x="2.5" y="2.5" width="4.5" height="9" rx="1.2" transform="rotate(45 4.75 7)" />
+    <line x1="9" y1="9" x2="16" y2="16" />
+    <line x1="4" y1="21" x2="14" y2="21" />
   </IconBase>
 )
 
@@ -152,8 +154,8 @@ const PhoneIcon = () => (
 
 const HealthIcon = () => (
   <IconBase>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M12 8v8M8 12h8" />
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="M12 15.3c-2.4-1.4-3.9-2.9-3.9-4.6a2.1 2.1 0 0 1 3.9-1.2 2.1 2.1 0 0 1 3.9 1.2c0 1.7-1.5 3.2-3.9 4.6z" />
   </IconBase>
 )
 
@@ -172,7 +174,7 @@ function SupportedBadge({ icon, name }: { icon: React.ReactNode; name: string })
 
 const SUPPORTED_ORGS = [
   { key: 'fbi', icon: <ShieldIcon />, name: 'Federal Bureau of Investigation' },
-  { key: 'doj', icon: <InstitutionIcon />, name: 'U.S. Department of Justice' },
+  { key: 'doj', icon: <GavelIcon />, name: 'U.S. Department of Justice' },
   { key: 'army', icon: <StarIcon />, name: 'U.S. Army' },
   { key: 'usmc', icon: <AnchorIcon />, name: 'U.S. Marine Corps' },
   { key: 'callpurity', icon: <PhoneIcon />, name: 'Callpurity' },
@@ -189,10 +191,7 @@ export default function HomePage() {
 
       <div className="xl:mx-[-4rem] xl:w-[calc(100%+8rem)]">
         {/* Hero */}
-        <section
-          aria-labelledby="hero-heading"
-          className="flex flex-col gap-4 pt-6 pb-8 sm:flex-row sm:items-end sm:justify-between sm:pt-8 sm:pb-10"
-        >
+        <section aria-labelledby="hero-heading" className="relative pt-6 pb-8 sm:pt-8 sm:pb-32">
           <div>
             <p
               className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}
@@ -206,7 +205,9 @@ export default function HomePage() {
               Garrell Tech Solutions LLC
             </h1>
           </div>
-          <div className={`rounded-lg border p-4 text-sm ${PRIMARY_BORDER}`}>
+          <div
+            className={`mt-4 rounded-lg border bg-white p-4 text-sm shadow-sm sm:absolute sm:right-0 sm:bottom-0 sm:mt-0 dark:bg-gray-950 ${PRIMARY_BORDER}`}
+          >
             <a
               href="mailto:jeremy@garrellts.com"
               className={`block font-semibold hover:underline ${PRIMARY}`}
@@ -257,7 +258,7 @@ export default function HomePage() {
           className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10"
         >
           <p className="text-primary-800/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
-            Principal&rsquo;s Track Record
+            Track Record
           </p>
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
             <StatBlock value="10" suffix="+" label="Years of federal software delivery" />
@@ -271,7 +272,7 @@ export default function HomePage() {
         {/* Company overview */}
         <section aria-labelledby="overview-heading" className="py-8">
           <SectionHeading id="overview-heading">Company Overview</SectionHeading>
-          <p className="max-w-3xl text-lg leading-8 text-gray-600 dark:text-gray-400">
+          <p className="text-lg leading-8 text-gray-600 dark:text-gray-400">
             Founded in November 2024, Garrell Tech Solutions LLC is built around a decade of
             hands-on delivery its principal has logged across defense and federal law-enforcement
             programs. The firm modernizes legacy systems and retires costly licenses (on-prem ETL →
@@ -285,7 +286,7 @@ export default function HomePage() {
         {/* Core competencies */}
         <section aria-labelledby="competencies-heading" className="py-8">
           <SectionHeading id="competencies-heading">Core Competencies</SectionHeading>
-          <ul className="grid gap-x-8 gap-y-3 text-gray-700 sm:grid-cols-2 dark:text-gray-300">
+          <ul className="grid list-disc gap-x-8 gap-y-3 pl-5 text-gray-700 sm:grid-cols-2 dark:text-gray-300">
             <li>Custom application development (web & mobile)</li>
             <li>Cloud engineering & migration (AWS / GovCloud)</li>
             <li>Legacy modernization & on-prem-to-cloud migration</li>
@@ -411,77 +412,81 @@ export default function HomePage() {
           </dl>
         </section>
 
-        {/* Company data */}
-        <section aria-labelledby="company-data-heading" className="py-8">
-          <SectionHeading id="company-data-heading">Company Data</SectionHeading>
-          <MintPanel>
-            <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
-              <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
-              <CompanyDataRow label="Founded" value="November 2024" />
-              <CompanyDataRow label="UEI" value="GG32V7Y6B1A2" />
-              <CompanyDataRow label="CAGE / NCAGE" value="20E53" />
-              <CompanyDataRow
-                label="NAICS Codes"
-                value={
-                  <ul className="space-y-1">
-                    <li>541511 · Custom Computer Programming</li>
-                    <li>541512 · Computer Systems Design</li>
-                    <li>541519 · Other Computer Related Services</li>
-                  </ul>
-                }
-              />
-              <CompanyDataRow label="Certifications" value="Small Business (SB)" />
-              <CompanyDataRow label="Delivery Model" value="Remote — nationwide, all 50 states" />
-            </dl>
-          </MintPanel>
-        </section>
+        {/* Company data & contact */}
+        <div className="grid gap-8 py-8 lg:grid-cols-2">
+          <section aria-labelledby="company-data-heading">
+            <SectionHeading id="company-data-heading">Company Data</SectionHeading>
+            <MintPanel>
+              <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
+                <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
+                <CompanyDataRow label="Founded" value="November 2024" />
+                <CompanyDataRow label="UEI" value="GG32V7Y6B1A2" />
+                <CompanyDataRow label="CAGE / NCAGE" value="20E53" />
+                <CompanyDataRow
+                  label="NAICS Codes"
+                  value={
+                    <ul className="space-y-1">
+                      <li>541511 · Custom Computer Programming</li>
+                      <li>541512 · Computer Systems Design</li>
+                      <li>541519 · Other Computer Related Services</li>
+                    </ul>
+                  }
+                />
+                <CompanyDataRow label="Certifications" value="Small Business (SB)" />
+                <CompanyDataRow label="Delivery Model" value="Remote — nationwide, all 50 states" />
+              </dl>
+            </MintPanel>
+          </section>
 
-        {/* Contact */}
-        <section aria-labelledby="contact-heading" className="py-8">
-          <SectionHeading id="contact-heading">Contact</SectionHeading>
-          <div className="bg-primary-800 dark:bg-primary-900 max-w-md rounded-lg p-6 text-white">
-            <p className="text-lg font-semibold">Jeremy Garrell</p>
-            <p className="text-white/70">Founder & Principal Engineer</p>
-            <dl className="mt-3 space-y-1.5">
-              <div className="flex gap-2">
-                <dt className="text-white/70">Email</dt>
-                <dd>
-                  <a href="mailto:jeremy@garrellts.com" className="hover:text-gold hover:underline">
-                    jeremy@garrellts.com
-                  </a>
-                </dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="text-white/70">Phone</dt>
-                <dd>
-                  <a href="tel:+12014007782" className="hover:text-gold hover:underline">
-                    (201) 400-7782
-                  </a>
-                </dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="text-white/70">Location</dt>
-                <dd>Coral Springs, FL 33065</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="text-white/70">Web</dt>
-                <dd>
-                  <a href="https://garrellts.com" className="hover:text-gold hover:underline">
-                    garrellts.com
-                  </a>
-                </dd>
-              </div>
-            </dl>
-            <a
-              href="https://calendly.com/jeremy-garrell/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200"
-            >
-              Book a 30-Minute Call
-            </a>
-          </div>
-        </section>
+          <section aria-labelledby="contact-heading">
+            <SectionHeading id="contact-heading">Contact</SectionHeading>
+            <div className="bg-primary-800 dark:bg-primary-900 rounded-lg p-6 text-white">
+              <p className="text-lg font-semibold">Jeremy Garrell</p>
+              <p className="text-white/70">Founder & Principal Engineer</p>
+              <dl className="mt-3 space-y-1.5">
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Email</dt>
+                  <dd>
+                    <a
+                      href="mailto:jeremy@garrellts.com"
+                      className="hover:text-gold hover:underline"
+                    >
+                      jeremy@garrellts.com
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Phone</dt>
+                  <dd>
+                    <a href="tel:+12014007782" className="hover:text-gold hover:underline">
+                      (201) 400-7782
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Location</dt>
+                  <dd>Coral Springs, FL 33065</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Web</dt>
+                  <dd>
+                    <a href="https://garrellts.com" className="hover:text-gold hover:underline">
+                      garrellts.com
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <a
+                href="https://calendly.com/jeremy-garrell/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200"
+              >
+                Book a 30-Minute Call
+              </a>
+            </div>
+          </section>
+        </div>
       </div>
     </>
   )
