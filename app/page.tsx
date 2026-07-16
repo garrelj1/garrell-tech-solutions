@@ -36,21 +36,21 @@ const PRIMARY_BORDER = 'border-primary-800/30 dark:border-primary-300/30'
 
 function SectionHeading({ children, id }: { children: React.ReactNode; id: string }) {
   return (
-    <div className="mb-8">
+    <div className="mb-5">
       <h2
         id={id}
         className={`text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm ${PRIMARY}`}
       >
         {children}
       </h2>
-      <div className="bg-gold mt-3 h-px w-12" />
+      <div className="bg-gold mt-2 h-px w-12" />
     </div>
   )
 }
 
 function MintPanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-6 sm:p-8 dark:bg-gray-900">
+    <div className="bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-5 sm:p-6 dark:bg-gray-900">
       {children}
     </div>
   )
@@ -91,7 +91,7 @@ function EngagementItem({ title, meta, body }: { title: string; meta?: string; b
 
 function CompanyDataRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-6">
+    <div className="flex flex-col gap-1 py-2 sm:flex-row sm:gap-6">
       <dt className="w-full text-xs font-semibold tracking-wide text-gray-500 uppercase sm:w-40 sm:shrink-0 dark:text-gray-400">
         {label}
       </dt>
@@ -111,7 +111,7 @@ export default function HomePage() {
       {/* Hero */}
       <section
         aria-labelledby="hero-heading"
-        className="flex flex-col gap-6 pt-8 pb-12 sm:flex-row sm:items-end sm:justify-between sm:pt-12 sm:pb-16"
+        className="flex flex-col gap-4 pt-6 pb-8 sm:flex-row sm:items-end sm:justify-between sm:pt-8 sm:pb-10"
       >
         <div>
           <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
@@ -143,9 +143,9 @@ export default function HomePage() {
       {/* Key stats band */}
       <section
         aria-label="Key figures"
-        className="bg-mint -mx-4 px-4 py-10 sm:mx-0 sm:rounded-lg sm:px-10"
+        className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10"
       >
-        <p className="text-primary-800/70 mb-6 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
+        <p className="text-primary-800/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
           Principal&rsquo;s Track Record
         </p>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
@@ -158,7 +158,7 @@ export default function HomePage() {
       </section>
 
       {/* Company overview */}
-      <section aria-labelledby="overview-heading" className="py-14">
+      <section aria-labelledby="overview-heading" className="py-8">
         <SectionHeading id="overview-heading">Company Overview</SectionHeading>
         <p className="max-w-3xl text-lg leading-8 text-gray-600 dark:text-gray-400">
           Founded in November 2024, Garrell Tech Solutions LLC is built around a decade of hands-on
@@ -172,7 +172,7 @@ export default function HomePage() {
       </section>
 
       {/* Core competencies */}
-      <section aria-labelledby="competencies-heading" className="py-14">
+      <section aria-labelledby="competencies-heading" className="py-8">
         <SectionHeading id="competencies-heading">Core Competencies</SectionHeading>
         <ul className="grid gap-x-8 gap-y-3 text-gray-700 sm:grid-cols-2 dark:text-gray-300">
           <li>Custom application development (web & mobile)</li>
@@ -187,10 +187,10 @@ export default function HomePage() {
       </section>
 
       {/* Differentiators */}
-      <section aria-labelledby="differentiators-heading" className="py-14">
+      <section aria-labelledby="differentiators-heading" className="py-8">
         <SectionHeading id="differentiators-heading">Differentiators</SectionHeading>
         <MintPanel>
-          <ul className="grid gap-6 sm:grid-cols-2">
+          <ul className="grid gap-4 sm:grid-cols-2">
             <DifferentiatorItem
               lead="Lower delivery risk —"
               body="proven on the FBI CJIS mission (2022–2024) and brought back to it in 2025."
@@ -216,13 +216,13 @@ export default function HomePage() {
       </section>
 
       {/* Program experience */}
-      <section aria-labelledby="experience-heading" className="py-14">
+      <section aria-labelledby="experience-heading" className="py-8">
         <SectionHeading id="experience-heading">Past Performance</SectionHeading>
 
         <h3 className="text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
           Company Engagements
         </h3>
-        <div className="mt-4 space-y-6">
+        <div className="mt-3 space-y-4">
           <EngagementItem
             title="FBI CJIS — Contract Software Engineer"
             meta="via Fusion Technology · Jul 2025 – Present"
@@ -235,10 +235,10 @@ export default function HomePage() {
           />
         </div>
 
-        <h3 className="mt-10 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+        <h3 className="mt-6 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
           Federal Customers Supported
         </h3>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             'Federal Bureau of Investigation',
             'U.S. Department of Justice',
@@ -247,17 +247,17 @@ export default function HomePage() {
           ].map((name) => (
             <div
               key={name}
-              className={`rounded-md border p-4 text-center text-sm font-medium text-gray-700 dark:text-gray-300 ${PRIMARY_BORDER}`}
+              className={`rounded-md border p-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300 ${PRIMARY_BORDER}`}
             >
               {name}
             </div>
           ))}
         </div>
 
-        <h3 className="mt-10 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+        <h3 className="mt-6 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
           Principal&rsquo;s Federal Program Experience
         </h3>
-        <div className="mt-4 space-y-6">
+        <div className="mt-3 space-y-4">
           <EngagementItem
             title="FBI N-DEx Modernization"
             meta="via ManTech / Fusion Technology, 2022–2024"
@@ -274,16 +274,16 @@ export default function HomePage() {
             body="Developed Android software to interface with and visualize data from an RF detection system."
           />
         </div>
-        <p className="mt-6 text-sm text-gray-500 italic dark:text-gray-400">
+        <p className="mt-4 text-sm text-gray-500 italic dark:text-gray-400">
           Principal&rsquo;s program experience delivered under prior prime contractors, not
           contracts held by Garrell Tech Solutions LLC.
         </p>
       </section>
 
       {/* Core technologies */}
-      <section aria-labelledby="tech-heading" className="py-14">
+      <section aria-labelledby="tech-heading" className="py-8">
         <SectionHeading id="tech-heading">Core Technologies</SectionHeading>
-        <dl className="grid gap-6 sm:grid-cols-2">
+        <dl className="grid gap-4 sm:grid-cols-2">
           <div>
             <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
               Languages
@@ -320,7 +320,7 @@ export default function HomePage() {
       </section>
 
       {/* Company data */}
-      <section aria-labelledby="company-data-heading" className="py-14">
+      <section aria-labelledby="company-data-heading" className="py-8">
         <SectionHeading id="company-data-heading">Company Data</SectionHeading>
         <MintPanel>
           <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
@@ -345,12 +345,12 @@ export default function HomePage() {
       </section>
 
       {/* Contact */}
-      <section aria-labelledby="contact-heading" className="py-14">
+      <section aria-labelledby="contact-heading" className="py-8">
         <SectionHeading id="contact-heading">Contact</SectionHeading>
-        <div className="bg-primary-800 dark:bg-primary-900 max-w-md rounded-lg p-8 text-white">
+        <div className="bg-primary-800 dark:bg-primary-900 max-w-md rounded-lg p-6 text-white">
           <p className="text-lg font-semibold">Jeremy Garrell</p>
           <p className="text-white/70">Founder & Principal Engineer</p>
-          <dl className="mt-4 space-y-2">
+          <dl className="mt-3 space-y-1.5">
             <div className="flex gap-2">
               <dt className="text-white/70">Email</dt>
               <dd>
@@ -380,6 +380,14 @@ export default function HomePage() {
               </dd>
             </div>
           </dl>
+          <a
+            href="https://calendly.com/jeremy-garrell/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200"
+          >
+            Book a 30-Minute Call
+          </a>
         </div>
       </section>
     </>
