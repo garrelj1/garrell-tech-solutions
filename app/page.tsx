@@ -109,7 +109,7 @@ function IconBase({ children }: { children: React.ReactNode }) {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-5 w-5 shrink-0"
+      className="h-7 w-7 shrink-0"
       aria-hidden="true"
     >
       {children}
@@ -160,15 +160,24 @@ const HealthIcon = () => (
 function SupportedBadge({ icon, name }: { icon: React.ReactNode; name: string }) {
   return (
     <div
-      className={`flex shrink-0 items-center gap-2 rounded-md border px-4 py-3 ${PRIMARY} ${PRIMARY_BORDER}`}
+      className={`flex shrink-0 items-center gap-3 rounded-lg border bg-white px-6 py-4 dark:bg-gray-950 ${PRIMARY} ${PRIMARY_BORDER}`}
     >
       {icon}
-      <span className="text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
+      <span className="text-base font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
         {name}
       </span>
     </div>
   )
 }
+
+const SUPPORTED_ORGS = [
+  { key: 'fbi', icon: <ShieldIcon />, name: 'Federal Bureau of Investigation' },
+  { key: 'doj', icon: <InstitutionIcon />, name: 'U.S. Department of Justice' },
+  { key: 'army', icon: <StarIcon />, name: 'U.S. Army' },
+  { key: 'usmc', icon: <AnchorIcon />, name: 'U.S. Marine Corps' },
+  { key: 'callpurity', icon: <PhoneIcon />, name: 'Callpurity' },
+  { key: 'php', icon: <HealthIcon />, name: 'Pro Health Partners' },
+]
 
 export default function HomePage() {
   return (
@@ -226,13 +235,19 @@ export default function HomePage() {
           <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
             Supported Agencies and Enterprise Systems
           </p>
-          <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
-            <SupportedBadge icon={<ShieldIcon />} name="Federal Bureau of Investigation" />
-            <SupportedBadge icon={<InstitutionIcon />} name="U.S. Department of Justice" />
-            <SupportedBadge icon={<StarIcon />} name="U.S. Army" />
-            <SupportedBadge icon={<AnchorIcon />} name="U.S. Marine Corps" />
-            <SupportedBadge icon={<PhoneIcon />} name="Callpurity" />
-            <SupportedBadge icon={<HealthIcon />} name="Pro Health Partners" />
+          <div className="marquee-mask -mx-4 mt-3 overflow-hidden bg-gray-50 py-8 select-none sm:mx-0 sm:rounded-lg dark:bg-gray-900/50">
+            <div className="marquee-track flex w-max gap-4">
+              <div className="flex shrink-0 gap-4">
+                {SUPPORTED_ORGS.map((org) => (
+                  <SupportedBadge key={org.key} icon={org.icon} name={org.name} />
+                ))}
+              </div>
+              <div className="flex shrink-0 gap-4" aria-hidden="true">
+                {SUPPORTED_ORGS.map((org) => (
+                  <SupportedBadge key={`${org.key}-dup`} icon={org.icon} name={org.name} />
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
