@@ -100,6 +100,76 @@ function CompanyDataRow({ label, value }: { label: string; value: React.ReactNod
   )
 }
 
+function IconBase({ children }: { children: React.ReactNode }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5 shrink-0"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  )
+}
+
+const ShieldIcon = () => (
+  <IconBase>
+    <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z" />
+  </IconBase>
+)
+
+const InstitutionIcon = () => (
+  <IconBase>
+    <path d="M4 10l8-6 8 6M5 10v10h14V10M9 20v-6h6v6" />
+  </IconBase>
+)
+
+const StarIcon = () => (
+  <IconBase>
+    <path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3z" />
+  </IconBase>
+)
+
+const AnchorIcon = () => (
+  <IconBase>
+    <circle cx="12" cy="4.5" r="1.75" />
+    <line x1="12" y1="6.5" x2="12" y2="21" />
+    <line x1="8.5" y1="10" x2="15.5" y2="10" />
+    <path d="M5 14a7 7 0 0 0 14 0" />
+  </IconBase>
+)
+
+const PhoneIcon = () => (
+  <IconBase>
+    <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" />
+  </IconBase>
+)
+
+const HealthIcon = () => (
+  <IconBase>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 8v8M8 12h8" />
+  </IconBase>
+)
+
+function SupportedBadge({ icon, name }: { icon: React.ReactNode; name: string }) {
+  return (
+    <div
+      className={`flex shrink-0 items-center gap-2 rounded-md border px-4 py-3 ${PRIMARY} ${PRIMARY_BORDER}`}
+    >
+      {icon}
+      <span className="text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
+        {name}
+      </span>
+    </div>
+  )
+}
+
 export default function HomePage() {
   return (
     <>
@@ -151,25 +221,18 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Federal customers supported */}
-        <section aria-label="Federal customers supported">
+        {/* Supported agencies and enterprise systems */}
+        <section aria-label="Supported agencies and enterprise systems">
           <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-            Federal Customers Supported
+            Supported Agencies and Enterprise Systems
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {[
-              'Federal Bureau of Investigation',
-              'U.S. Department of Justice',
-              'U.S. Army',
-              'U.S. Marine Corps',
-            ].map((name) => (
-              <div
-                key={name}
-                className={`rounded-md border p-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300 ${PRIMARY_BORDER}`}
-              >
-                {name}
-              </div>
-            ))}
+          <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
+            <SupportedBadge icon={<ShieldIcon />} name="Federal Bureau of Investigation" />
+            <SupportedBadge icon={<InstitutionIcon />} name="U.S. Department of Justice" />
+            <SupportedBadge icon={<StarIcon />} name="U.S. Army" />
+            <SupportedBadge icon={<AnchorIcon />} name="U.S. Marine Corps" />
+            <SupportedBadge icon={<PhoneIcon />} name="Callpurity" />
+            <SupportedBadge icon={<HealthIcon />} name="Pro Health Partners" />
           </div>
         </section>
 
