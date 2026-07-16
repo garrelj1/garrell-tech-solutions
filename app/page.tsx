@@ -109,21 +109,22 @@ export default function HomePage() {
       />
 
       {/* Hero */}
-      <section aria-labelledby="hero-heading" className="pt-8 pb-12 sm:pt-12 sm:pb-16">
-        <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
-          Custom Software · Strategic Growth
-        </p>
-        <h1
-          id="hero-heading"
-          className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
-        >
-          Garrell Tech Solutions LLC
-        </h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-600 sm:text-xl dark:text-gray-400">
-          A senior software engineer for mission-critical federal work — cloud back-end to tactical
-          edge — at small-business rates, without the ramp-up of a large integrator.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <section
+        aria-labelledby="hero-heading"
+        className="flex flex-col gap-6 pt-8 pb-12 sm:flex-row sm:items-end sm:justify-between sm:pt-12 sm:pb-16"
+      >
+        <div>
+          <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
+            Custom Software · Strategic Growth
+          </p>
+          <h1
+            id="hero-heading"
+            className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
+          >
+            Garrell Tech Solutions LLC
+          </h1>
+        </div>
+        <div className="flex flex-col gap-3 sm:items-end">
           <a
             href="mailto:jeremy@garrellts.com"
             className="bg-primary-800 hover:bg-primary-900 inline-block rounded-md px-6 py-3 text-center font-semibold text-white shadow-sm transition-colors duration-200"
