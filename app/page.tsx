@@ -1,200 +1,504 @@
 import { genPageMetadata } from 'app/seo'
 
-export const metadata = genPageMetadata({ title: 'Home' })
+export const metadata = genPageMetadata({
+  title: 'Federal Software Delivery, Cloud to Tactical Edge',
+  description:
+    'Garrell Tech Solutions is a small-business federal software consultancy: custom application development, cloud migration, and legacy modernization for federal primes and agencies. Proven on FBI CJIS, N-DEx, and Army/USMC programs.',
+})
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Garrell Tech Solutions LLC',
+  url: 'https://garrellts.com',
+  logo: 'https://garrellts.com/static/images/gts-logo-full-color.png',
+  foundingDate: '2024-11',
+  description:
+    'Custom software development and cloud engineering for federal primes and agencies, from cloud back-end to tactical edge.',
+  email: 'jeremy@garrellts.com',
+  telephone: '+1-201-400-7782',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Coral Springs',
+    addressRegion: 'FL',
+    postalCode: '33065',
+    addressCountry: 'US',
+  },
+  founder: {
+    '@type': 'Person',
+    name: 'Jeremy Garrell',
+  },
+  sameAs: ['https://www.linkedin.com/company/107989162/'],
+}
+
+const PRIMARY = 'text-primary-800 dark:text-primary-300'
+const PRIMARY_BORDER = 'border-primary-800/30 dark:border-primary-300/30'
+
+function SectionHeading({ children, id }: { children: React.ReactNode; id: string }) {
+  return (
+    <div className="mb-5">
+      <h2
+        id={id}
+        className={`text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm ${PRIMARY}`}
+      >
+        {children}
+      </h2>
+      <div className="bg-gold mt-2 h-px w-12" />
+    </div>
+  )
+}
+
+function MintPanel({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={`bg-mint border-gold dark:border-gold rounded-lg border-t-4 p-5 sm:p-6 dark:bg-gray-900 ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+function StatBlock({ value, suffix, label }: { value: string; suffix?: string; label: string }) {
+  return (
+    <div className="text-center">
+      <div className="text-primary-800 dark:text-primary-300 text-3xl font-bold sm:text-4xl">
+        {value}
+        {suffix && <span className="text-gold">{suffix}</span>}
+      </div>
+      <div className="text-primary-800/70 dark:text-primary-300/70 mt-1 text-xs sm:text-sm">
+        {label}
+      </div>
+    </div>
+  )
+}
+
+function DifferentiatorItem({ lead, body }: { lead: string; body: string }) {
+  return (
+    <li className="border-gold/70 border-l-2 pl-4">
+      <span className="font-semibold text-gray-900 dark:text-gray-100">{lead}</span>{' '}
+      <span className="text-gray-700 dark:text-gray-300">{body}</span>
+    </li>
+  )
+}
+
+function EngagementItem({ title, meta, body }: { title: string; meta?: string; body: string }) {
+  return (
+    <div>
+      <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+        {title}
+        {meta && <span className="font-normal text-gray-500 dark:text-gray-400"> — {meta}</span>}
+      </h4>
+      <p className="mt-1 text-gray-600 dark:text-gray-400">{body}</p>
+    </div>
+  )
+}
+
+function CompanyDataRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1 py-2 sm:flex-row sm:gap-6">
+      <dt className="w-full text-xs font-semibold tracking-wide text-gray-500 uppercase sm:w-40 sm:shrink-0 dark:text-gray-400">
+        {label}
+      </dt>
+      <dd className="text-gray-900 dark:text-gray-100">{value}</dd>
+    </div>
+  )
+}
+
+function IconBase({ children }: { children: React.ReactNode }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-7 w-7 shrink-0"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  )
+}
+
+const ShieldIcon = () => (
+  <IconBase>
+    <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z" />
+  </IconBase>
+)
+
+const GavelIcon = () => (
+  <IconBase>
+    <rect x="2.5" y="2.5" width="4.5" height="9" rx="1.2" transform="rotate(45 4.75 7)" />
+    <line x1="9" y1="9" x2="16" y2="16" />
+    <line x1="4" y1="21" x2="14" y2="21" />
+  </IconBase>
+)
+
+const StarIcon = () => (
+  <IconBase>
+    <path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3z" />
+  </IconBase>
+)
+
+const AnchorIcon = () => (
+  <IconBase>
+    <circle cx="12" cy="4.5" r="1.75" />
+    <line x1="12" y1="6.5" x2="12" y2="21" />
+    <line x1="8.5" y1="10" x2="15.5" y2="10" />
+    <path d="M5 14a7 7 0 0 0 14 0" />
+  </IconBase>
+)
+
+const PhoneIcon = () => (
+  <IconBase>
+    <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" />
+  </IconBase>
+)
+
+const HealthIcon = () => (
+  <IconBase>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="M12 15.3c-2.4-1.4-3.9-2.9-3.9-4.6a2.1 2.1 0 0 1 3.9-1.2 2.1 2.1 0 0 1 3.9 1.2c0 1.7-1.5 3.2-3.9 4.6z" />
+  </IconBase>
+)
+
+function SupportedBadge({ icon, name }: { icon: React.ReactNode; name: string }) {
+  return (
+    <div
+      className={`flex shrink-0 items-center gap-3 rounded-lg border bg-white px-6 py-4 dark:bg-gray-950 ${PRIMARY} ${PRIMARY_BORDER}`}
+    >
+      {icon}
+      <span className="text-base font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
+        {name}
+      </span>
+    </div>
+  )
+}
+
+const SUPPORTED_ORGS = [
+  { key: 'fbi', icon: <ShieldIcon />, name: 'Federal Bureau of Investigation' },
+  { key: 'doj', icon: <GavelIcon />, name: 'U.S. Department of Justice' },
+  { key: 'army', icon: <StarIcon />, name: 'U.S. Army' },
+  { key: 'usmc', icon: <AnchorIcon />, name: 'U.S. Marine Corps' },
+  { key: 'callpurity', icon: <PhoneIcon />, name: 'Callpurity' },
+  { key: 'php', icon: <HealthIcon />, name: 'Pro Health Partners' },
+]
 
 export default function HomePage() {
   return (
-    <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-          Custom Software. Strategic Growth.
-        </h1>
-        <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-          We build custom software solutions designed to meet your unique needs. Transform your
-          business. Optimize your workflows.
-        </p>
-      </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <div className="space-y-8 py-12">
-        <section className="prose dark:prose-invert max-w-none">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">
-            What We Offer
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Automation & Workflows
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Streamline your business processes with custom automation tools that reduce manual
-                  work and increase efficiency.
-                </p>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Android Application Development
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Native Android applications built with Kotlin or Java, designed for performance,
-                  scalability, and seamless integration with your backend systems and services.
-                </p>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Database Solutions
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Efficient database design and optimization to ensure your data is structured,
-                  accessible, and performs at scale.
-                </p>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Web Applications & APIs
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Custom web applications built with modern technologies and robust RESTful APIs
-                  that integrate seamlessly with your existing systems to deliver scalable, secure,
-                  and user-friendly solutions.
-                </p>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Cloud Integration
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Cloud-native solutions leveraging AWS, GCP, or DigitalOcean to provide scalable
-                  infrastructure and reliable deployment pipelines.
-                </p>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
-              <div className="absolute right-0 bottom-0 opacity-10">
-                <svg className="h-32 w-32" fill="none" viewBox="0 0 24 24" stroke="#cfa821">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-              </div>
-              <div className="relative">
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  Legacy System Modernization
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Transform outdated systems into modern, maintainable solutions that align with
-                  current best practices and technologies.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="prose dark:prose-invert max-w-none pt-8">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100">Our Approach</h2>
-          <p className="mb-4 text-lg text-gray-600 dark:text-gray-400">
-            We work closely with you to understand your business needs, technical requirements, and
-            long-term goals. Our development process emphasizes clear communication, iterative
-            delivery, and quality code that's maintainable and scalable for years to come.
+      <div className="xl:mx-[-4rem] xl:w-[calc(100%+8rem)]">
+        {/* Hero */}
+        <section aria-labelledby="hero-heading" className="pt-6 pb-8 sm:pt-8 sm:pb-10">
+          <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
+            Custom Software · Strategic Growth
           </p>
-          <ul className="list-disc space-y-2 pl-6 text-gray-600 dark:text-gray-400">
-            <li>Requirements analysis and technical planning</li>
-            <li>Agile development with regular updates</li>
-            <li>Thorough testing and quality assurance</li>
-            <li>Deployment and ongoing support</li>
-          </ul>
-        </section>
-
-        <section className="pt-12 pb-8">
-          <div className="border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 rounded-lg border p-8 text-center md:p-12">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Ready to Get Started?
-            </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-              Schedule a free consultation to discuss your custom software development needs. Let's
-              explore how we can help transform your business with the right technology solutions.
-            </p>
+          <h1
+            id="hero-heading"
+            className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
+          >
+            Garrell Tech Solutions LLC
+          </h1>
+          <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <a
+              href="mailto:jeremy@garrellts.com"
+              className={`font-semibold hover:underline ${PRIMARY}`}
+            >
+              jeremy@garrellts.com
+            </a>
+            <span className="text-gray-300 dark:text-gray-700">·</span>
+            <a href="tel:+12014007782" className="text-gray-600 hover:underline dark:text-gray-400">
+              (201) 400-7782
+            </a>
+            <span className="text-gray-300 dark:text-gray-700">·</span>
             <a
               href="https://calendly.com/jeremy-garrell/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 inline-block rounded-lg px-8 py-4 text-lg font-semibold text-white shadow-lg transition-colors duration-200 hover:shadow-xl"
+              className="text-gold font-semibold hover:underline"
             >
-              Book a Consultation
+              Book a 30-min call →
             </a>
-            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              Free 30-minute consultation • No commitment required
-            </p>
           </div>
         </section>
+
+        {/* Supported agencies and enterprise systems */}
+        <section aria-label="Supported agencies and enterprise systems">
+          <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+            Supported Agencies and Enterprise Systems
+          </p>
+          <div className="marquee-mask -mx-4 mt-3 overflow-hidden bg-gray-50 py-8 select-none sm:mx-0 sm:rounded-lg dark:bg-gray-900/50">
+            <div className="marquee-track flex w-max gap-4">
+              <div className="flex shrink-0 gap-4">
+                {SUPPORTED_ORGS.map((org) => (
+                  <SupportedBadge key={org.key} icon={org.icon} name={org.name} />
+                ))}
+              </div>
+              <div className="flex shrink-0 gap-4" aria-hidden="true">
+                {SUPPORTED_ORGS.map((org) => (
+                  <SupportedBadge key={`${org.key}-dup`} icon={org.icon} name={org.name} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Key stats band */}
+        <section
+          aria-label="Key figures"
+          className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10 dark:bg-gray-900"
+        >
+          <p className="text-primary-800/70 dark:text-primary-300/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
+            Track Record
+          </p>
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
+            <StatBlock value="10" suffix="+" label="Years of federal software delivery" />
+            <StatBlock value="3" label="Federal customers — FBI · Army · USMC" />
+            <StatBlock value="3" label="Legacy systems modernized" />
+            <StatBlock value="150" suffix="+" label="Businesses served on Callpurity SaaS" />
+            <StatBlock value="1M" suffix="+" label="Records managed across 50 states" />
+          </div>
+        </section>
+
+        {/* Company overview */}
+        <section aria-labelledby="overview-heading" className="py-8">
+          <SectionHeading id="overview-heading">Company Overview</SectionHeading>
+          <p className="text-lg leading-8 text-gray-600 dark:text-gray-400">
+            Founded in November 2024, Garrell Tech Solutions LLC is built around a decade of
+            hands-on delivery its principal has logged across defense and federal law-enforcement
+            programs. The firm modernizes legacy systems and retires costly licenses (on-prem ETL →
+            AWS GovCloud; Micro Focus IDOL → OpenSearch), delivers as a single vendor from cloud
+            back-end to embedded tactical edge, and applies product-owner discipline that turns
+            stakeholder needs into shipped software. Proven on the FBI CJIS mission in 2022–2024 and
+            brought back to it in 2025.
+          </p>
+        </section>
+
+        {/* Core competencies */}
+        <section aria-labelledby="competencies-heading" className="py-8">
+          <SectionHeading id="competencies-heading">Core Competencies</SectionHeading>
+          <ul className="grid list-disc gap-x-8 gap-y-3 pl-5 text-gray-700 sm:grid-cols-2 dark:text-gray-300">
+            <li>Custom application development (web & mobile)</li>
+            <li>Cloud engineering & migration (AWS / GovCloud)</li>
+            <li>Legacy modernization & on-prem-to-cloud migration</li>
+            <li>Microservices & high-throughput data pipelines</li>
+            <li>Enterprise search (OpenSearch / Elasticsearch)</li>
+            <li>Android, embedded & tactical-edge software</li>
+            <li>DevSecOps & CI/CD automation</li>
+            <li>Product ownership & technical team leadership</li>
+          </ul>
+        </section>
+
+        {/* Differentiators */}
+        <section aria-labelledby="differentiators-heading" className="py-8">
+          <SectionHeading id="differentiators-heading">Differentiators</SectionHeading>
+          <MintPanel>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              <DifferentiatorItem
+                lead="Lower delivery risk —"
+                body="proven on the FBI CJIS mission (2022–2024) and brought back to it in 2025."
+              />
+              <DifferentiatorItem
+                lead="One vendor, cloud to edge —"
+                body="AWS / GovCloud back-end through embedded tactical software; fewer integration seams."
+              />
+              <DifferentiatorItem
+                lead="Modernization that cuts cost —"
+                body="retires legacy systems & licenses (on-prem ETL → GovCloud; IDOL → OpenSearch)."
+              />
+              <DifferentiatorItem
+                lead="Senior talent, small-business rates —"
+                body="principal-level delivery without integrator overhead."
+              />
+              <DifferentiatorItem
+                lead="Product-owner discipline —"
+                body="turns stakeholder needs into shipped products, cutting requirements-translation overhead."
+              />
+            </ul>
+          </MintPanel>
+        </section>
+
+        {/* Program experience */}
+        <section aria-labelledby="experience-heading" className="py-8">
+          <SectionHeading id="experience-heading">Past Performance</SectionHeading>
+
+          <h3 className="text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+            Company Engagements
+          </h3>
+          <div className="mt-3 space-y-4">
+            <EngagementItem
+              title="FBI CJIS — Contract Software Engineer"
+              meta="via Fusion Technology · Jul 2025 – Present"
+              body="Application-development and cloud engineering services to the FBI Criminal Justice Information Services Division, delivered through Fusion Technology."
+            />
+            <EngagementItem
+              title="Callpurity — B2B SaaS Platform"
+              meta="Fractional CTO, contractor engagement via GTS · Current"
+              body="Serving as contractor CTO, leading a 7-person team (four engineers, a designer, two contractors) building a B2B SaaS platform serving 150+ business customers and hundreds of users, with 1M+ phone numbers under management across all 50 states."
+            />
+          </div>
+
+          <h3 className="mt-6 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+            Principal&rsquo;s Federal Program Experience
+          </h3>
+          <div className="mt-3 space-y-4">
+            <EngagementItem
+              title="FBI N-DEx Modernization"
+              meta="via ManTech / Fusion Technology, 2022–2024"
+              body="Supported modernization of the FBI's National Data Exchange (N-DEx): built AWS microservices for a high-throughput data-ingest pipeline, migrated an on-prem ETL pipeline to AWS GovCloud, and moved enterprise search from Micro Focus IDOL to OpenSearch."
+            />
+            <EngagementItem
+              title="U.S. Army & USMC, Picatinny Arsenal"
+              meta="via Parsons & Decilog"
+              body="Led Android modernization of a mortar fire-control system; delivered fire-control application suites and single-board-computer Linux BSP support for new hardware."
+            />
+            <EngagementItem
+              title="U.S. Army RF Systems"
+              meta="via Booz Allen Hamilton"
+              body="Developed Android software to interface with and visualize data from an RF detection system."
+            />
+          </div>
+          <p className="mt-4 text-sm text-gray-500 italic dark:text-gray-400">
+            Principal&rsquo;s program experience delivered under prior prime contractors, not
+            contracts held by Garrell Tech Solutions LLC.
+          </p>
+        </section>
+
+        {/* Core technologies */}
+        <section aria-labelledby="tech-heading" className="py-8">
+          <SectionHeading id="tech-heading">Core Technologies</SectionHeading>
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                Languages
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                Java, Kotlin, Python, TypeScript, JavaScript, Rust, C, SQL
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                AWS
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                EC2, S3, RDS, Lambda, SAM, CDK, CloudFormation, ECS, SQS, CloudWatch, CloudTrail
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                Frontend & Mobile
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                React, Next.js, Android/AOSP
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                Backend & Data
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                Spring, RESTful services, OpenSearch, PostgreSQL, Supabase, Linux
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                Tooling
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                Git, GitHub Actions, Jira, Bitbucket, Bamboo, Maven, Gradle, Docker
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        {/* Company data & contact */}
+        <div className="grid gap-8 py-8 lg:grid-cols-2">
+          <section aria-labelledby="company-data-heading" className="flex flex-col">
+            <SectionHeading id="company-data-heading">Company Data</SectionHeading>
+            <MintPanel className="flex-1">
+              <dl className="divide-y divide-gray-900/10 dark:divide-gray-100/10">
+                <CompanyDataRow label="Legal Entity" value="Garrell Tech Solutions LLC" />
+                <CompanyDataRow label="Founded" value="November 2024" />
+                <CompanyDataRow label="UEI" value="GG32V7Y6B1A2" />
+                <CompanyDataRow label="CAGE / NCAGE" value="20E53" />
+                <CompanyDataRow
+                  label="NAICS Codes"
+                  value={
+                    <ul className="space-y-1">
+                      <li>541511 · Custom Computer Programming</li>
+                      <li>541512 · Computer Systems Design</li>
+                      <li>541519 · Other Computer Related Services</li>
+                    </ul>
+                  }
+                />
+                <CompanyDataRow label="Certifications" value="Small Business (SB)" />
+                <CompanyDataRow label="Delivery Model" value="Remote — nationwide, all 50 states" />
+              </dl>
+            </MintPanel>
+          </section>
+
+          <section aria-labelledby="contact-heading" className="flex flex-col">
+            <SectionHeading id="contact-heading">Contact</SectionHeading>
+            <div className="bg-primary-800 dark:bg-primary-900 flex flex-1 flex-col rounded-lg p-6 text-white">
+              <p className="text-lg font-semibold">Jeremy Garrell</p>
+              <p className="text-white/70">Founder & Principal Engineer</p>
+              <dl className="mt-3 space-y-1.5">
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Email</dt>
+                  <dd>
+                    <a
+                      href="mailto:jeremy@garrellts.com"
+                      className="hover:text-gold hover:underline"
+                    >
+                      jeremy@garrellts.com
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Phone</dt>
+                  <dd>
+                    <a href="tel:+12014007782" className="hover:text-gold hover:underline">
+                      (201) 400-7782
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Location</dt>
+                  <dd>Coral Springs, FL 33065</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-white/70">Web</dt>
+                  <dd>
+                    <a href="https://garrellts.com" className="hover:text-gold hover:underline">
+                      garrellts.com
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <a
+                href="https://calendly.com/jeremy-garrell/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block self-start rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200 lg:mt-auto"
+              >
+                Book a 30-Minute Call
+              </a>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

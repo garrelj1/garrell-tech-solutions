@@ -11,18 +11,22 @@
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  /* Brand ramp derived from the GTS logo (public/static/images/gts-logo-full-color.png):
+     green #0F4E0F (primary-800), gold #CFA821, mint #E4F9F5 */
+  --color-primary-50: oklch(0.975 0.015 142.9);
+  --color-primary-100: oklch(0.95 0.035 142.9);
+  --color-primary-200: oklch(0.895 0.06 142.9);
+  --color-primary-300: oklch(0.815 0.085 142.9);
+  --color-primary-400: oklch(0.72 0.105 142.9);
+  --color-primary-500: oklch(0.61 0.12 142.9);
+  --color-primary-600: oklch(0.52 0.122 142.9);
+  --color-primary-700: oklch(0.43 0.118 142.9);
+  --color-primary-800: oklch(0.3714 0.1122 142.9);
+  --color-primary-900: oklch(0.28 0.09 142.9);
+  --color-primary-950: oklch(0.19 0.065 142.9);
+
+  --color-gold: oklch(0.7461 0.1447 90.89);
+  --color-mint: oklch(0.9656 0.0226 183.19);
 
   --color-gray-50: oklch(0.985 0.002 247.839);
   --color-gray-100: oklch(0.967 0.003 264.542);
@@ -172,4 +176,25 @@ input:-webkit-autofill:focus {
 .linkicon {
   display: inline-block;
   vertical-align: middle;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
