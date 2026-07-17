@@ -379,13 +379,13 @@ export default function HomePage() {
         {/* Core technologies */}
         <section aria-labelledby="tech-heading" className="py-8">
           <SectionHeading id="tech-heading">Core Technologies</SectionHeading>
-          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
                 Languages
               </dt>
               <dd className="mt-1 text-gray-700 dark:text-gray-300">
-                Java, Python, TypeScript, JavaScript, Rust, C, SQL
+                Java, Kotlin, Python, TypeScript, JavaScript, Rust, C, SQL
               </dd>
             </div>
             <div>
@@ -393,15 +393,23 @@ export default function HomePage() {
                 AWS
               </dt>
               <dd className="mt-1 text-gray-700 dark:text-gray-300">
-                EC2, S3, RDS, Lambda, SAM, CloudFormation
+                EC2, S3, RDS, Lambda, SAM, CDK, CloudFormation, ECS, SQS, CloudWatch, CloudTrail
               </dd>
             </div>
             <div>
               <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                Platforms & Frameworks
+                Frontend & Mobile
               </dt>
               <dd className="mt-1 text-gray-700 dark:text-gray-300">
-                Spring, Android/AOSP, RESTful services, OpenSearch, Linux
+                React, Next.js, Android/AOSP
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                Backend & Data
+              </dt>
+              <dd className="mt-1 text-gray-700 dark:text-gray-300">
+                Spring, RESTful services, OpenSearch, PostgreSQL, Supabase, Linux
               </dd>
             </div>
             <div>
@@ -409,7 +417,7 @@ export default function HomePage() {
                 Tooling
               </dt>
               <dd className="mt-1 text-gray-700 dark:text-gray-300">
-                Git, Jira, Bitbucket, Bamboo, Maven, Gradle
+                Git, GitHub Actions, Jira, Bitbucket, Bamboo, Maven, Gradle, Docker
               </dd>
             </div>
           </dl>
