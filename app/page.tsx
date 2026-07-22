@@ -171,14 +171,14 @@ const HealthIcon = () => (
 
 function SupportedBadge({ icon, name }: { icon: React.ReactNode; name: string }) {
   return (
-    <div
-      className={`flex shrink-0 items-center gap-3 rounded-lg border bg-white px-6 py-4 dark:bg-gray-950 ${PRIMARY} ${PRIMARY_BORDER}`}
+    <li
+      className={`flex items-center gap-3 rounded-lg border bg-white px-5 py-4 dark:bg-gray-950 ${PRIMARY} ${PRIMARY_BORDER}`}
     >
       {icon}
-      <span className="text-base font-medium whitespace-nowrap text-gray-700 dark:text-gray-300">
+      <span className="text-base leading-tight font-medium text-gray-700 dark:text-gray-300">
         {name}
       </span>
-    </div>
+    </li>
   )
 }
 
@@ -203,54 +203,57 @@ export default function HomePage() {
         {/* Hero */}
         <section aria-labelledby="hero-heading" className="pt-6 pb-8 sm:pt-8 sm:pb-10">
           <p className={`text-xs font-semibold tracking-[0.25em] uppercase sm:text-sm ${PRIMARY}`}>
-            Custom Software · Strategic Growth
+            Federal Software Delivery
           </p>
-          <h1
-            id="hero-heading"
-            className="mt-3 text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
-          >
-            Garrell Tech Solutions LLC
-          </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-            <a
-              href="mailto:jeremy@garrellts.com"
-              className={`font-semibold hover:underline ${PRIMARY}`}
-            >
-              jeremy@garrellts.com
-            </a>
-            <span className="text-gray-300 dark:text-gray-700">·</span>
-            <a href="tel:+12014007782" className="text-gray-600 hover:underline dark:text-gray-400">
-              (201) 400-7782
-            </a>
-            <span className="text-gray-300 dark:text-gray-700">·</span>
-            <a
-              href="https://calendly.com/jeremy-garrell/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold font-semibold hover:underline"
-            >
-              Book a 30-min call →
-            </a>
-          </div>
-        </section>
-
-        {/* Supported agencies and enterprise systems */}
-        <section aria-label="Supported agencies and enterprise systems">
-          <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-            Supported Agencies and Enterprise Systems
-          </p>
-          <div className="marquee-mask -mx-4 mt-3 overflow-hidden bg-gray-50 py-8 select-none sm:mx-0 sm:rounded-lg dark:bg-gray-900/50">
-            <div className="marquee-track flex w-max gap-4">
-              <div className="flex shrink-0 gap-4">
-                {SUPPORTED_ORGS.map((org) => (
-                  <SupportedBadge key={org.key} icon={org.icon} name={org.name} />
-                ))}
-              </div>
-              <div className="flex shrink-0 gap-4" aria-hidden="true">
-                {SUPPORTED_ORGS.map((org) => (
-                  <SupportedBadge key={`${org.key}-dup`} icon={org.icon} name={org.name} />
-                ))}
-              </div>
+          <div className="mt-3 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div>
+              <h1
+                id="hero-heading"
+                className="text-4xl leading-tight font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-gray-100"
+              >
+                Garrell Tech Solutions LLC
+              </h1>
+              <p className="mt-3 max-w-xl text-lg font-medium text-gray-600 sm:text-xl dark:text-gray-400">
+                Product ownership that turns business requirements into working software.
+              </p>
+            </div>
+            <div className="border-t-gold w-full shrink-0 rounded-lg border border-t-4 border-gray-200 bg-white p-5 lg:w-auto lg:min-w-[16rem] dark:border-gray-800 dark:bg-gray-950">
+              <dl className="space-y-2 text-sm">
+                <div className="flex items-baseline gap-2">
+                  <dt className="w-12 shrink-0 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                    Email
+                  </dt>
+                  <dd className="min-w-0 break-words">
+                    <a
+                      href="mailto:jeremy@garrellts.com"
+                      className={`font-semibold hover:underline ${PRIMARY}`}
+                    >
+                      jeremy@garrellts.com
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <dt className="w-12 shrink-0 text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                    Phone
+                  </dt>
+                  <dd>
+                    <a
+                      href="tel:+12014007782"
+                      className="text-gray-700 hover:underline dark:text-gray-300"
+                    >
+                      (201) 400-7782
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <a
+                href="https://calendly.com/jeremy-garrell/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gold text-primary-900 hover:bg-gold/90 mt-4 block rounded-md px-4 py-3 text-center text-sm font-semibold transition-colors duration-200"
+              >
+                Book a 30-min call →
+              </a>
             </div>
           </div>
         </section>
@@ -260,7 +263,7 @@ export default function HomePage() {
           aria-label="Key figures"
           className="bg-mint -mx-4 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10 dark:bg-gray-900"
         >
-          <p className="text-primary-800/70 dark:text-primary-300/70 mb-4 text-center text-xs font-semibold tracking-[0.2em] uppercase sm:text-sm">
+          <p className="text-primary-800/70 dark:text-primary-300/70 mb-4 text-center text-sm font-semibold tracking-[0.2em] uppercase sm:text-base">
             Track Record
           </p>
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-5 sm:gap-4">
@@ -269,6 +272,20 @@ export default function HomePage() {
             <StatBlock value="3" label="Legacy systems modernized" />
             <StatBlock value="150" suffix="+" label="Businesses served on Callpurity SaaS" />
             <StatBlock value="1M" suffix="+" label="Records managed across 50 states" />
+          </div>
+        </section>
+
+        {/* Supported agencies and enterprise systems */}
+        <section aria-label="Supported agencies and enterprise systems" className="mt-8">
+          <div className="-mx-4 bg-gray-50 px-4 py-6 sm:mx-0 sm:rounded-lg sm:px-10 dark:bg-gray-900/50">
+            <p className="text-primary-800/70 dark:text-primary-300/70 mb-5 text-center text-sm font-semibold tracking-[0.2em] uppercase sm:text-base">
+              Supported Agencies and Enterprise Systems
+            </p>
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {SUPPORTED_ORGS.map((org) => (
+                <SupportedBadge key={org.key} icon={org.icon} name={org.name} />
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -307,6 +324,10 @@ export default function HomePage() {
           <MintPanel>
             <ul className="grid gap-4 sm:grid-cols-2">
               <DifferentiatorItem
+                lead="Product ownership, end to end —"
+                body="turns business requirements into shipped software, cutting requirements-translation overhead."
+              />
+              <DifferentiatorItem
                 lead="Lower delivery risk —"
                 body="proven on the FBI CJIS mission (2022–2024) and brought back to it in 2025."
               />
@@ -321,10 +342,6 @@ export default function HomePage() {
               <DifferentiatorItem
                 lead="Senior talent, small-business rates —"
                 body="principal-level delivery without integrator overhead."
-              />
-              <DifferentiatorItem
-                lead="Product-owner discipline —"
-                body="turns stakeholder needs into shipped products, cutting requirements-translation overhead."
               />
             </ul>
           </MintPanel>
@@ -451,37 +468,36 @@ export default function HomePage() {
 
           <section aria-labelledby="contact-heading" className="flex flex-col">
             <SectionHeading id="contact-heading">Contact</SectionHeading>
-            <div className="bg-primary-800 dark:bg-primary-900 flex flex-1 flex-col rounded-lg p-6 text-white">
-              <p className="text-lg font-semibold">Jeremy Garrell</p>
-              <p className="text-white/70">Founder & Principal Engineer</p>
+            <MintPanel className="flex flex-1 flex-col">
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Jeremy Garrell
+              </p>
+              <p className="text-gray-500 dark:text-gray-400">Founder & Principal Engineer</p>
               <dl className="mt-3 space-y-1.5">
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Email</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Email</dt>
                   <dd>
-                    <a
-                      href="mailto:jeremy@garrellts.com"
-                      className="hover:text-gold hover:underline"
-                    >
+                    <a href="mailto:jeremy@garrellts.com" className={`hover:underline ${PRIMARY}`}>
                       jeremy@garrellts.com
                     </a>
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Phone</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Phone</dt>
                   <dd>
-                    <a href="tel:+12014007782" className="hover:text-gold hover:underline">
+                    <a href="tel:+12014007782" className={`hover:underline ${PRIMARY}`}>
                       (201) 400-7782
                     </a>
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Location</dt>
-                  <dd>Coral Springs, FL 33065</dd>
+                  <dt className="text-gray-500 dark:text-gray-400">Location</dt>
+                  <dd className="text-gray-900 dark:text-gray-100">Coral Springs, FL 33065</dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Web</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Web</dt>
                   <dd>
-                    <a href="https://garrellts.com" className="hover:text-gold hover:underline">
+                    <a href="https://garrellts.com" className={`hover:underline ${PRIMARY}`}>
                       garrellts.com
                     </a>
                   </dd>
@@ -491,11 +507,11 @@ export default function HomePage() {
                 href="https://calendly.com/jeremy-garrell/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block self-start rounded-md px-5 py-2.5 text-center text-sm font-semibold transition-colors duration-200 lg:mt-auto"
+                className="bg-gold text-primary-900 hover:bg-gold/90 mt-5 inline-block self-start rounded-md px-5 py-3 text-center text-sm font-semibold transition-colors duration-200 lg:mt-auto"
               >
                 Book a 30-Minute Call
               </a>
-            </div>
+            </MintPanel>
           </section>
         </div>
       </div>
