@@ -468,37 +468,36 @@ export default function HomePage() {
 
           <section aria-labelledby="contact-heading" className="flex flex-col">
             <SectionHeading id="contact-heading">Contact</SectionHeading>
-            <div className="bg-primary-800 dark:bg-primary-900 flex flex-1 flex-col rounded-lg p-6 text-white">
-              <p className="text-lg font-semibold">Jeremy Garrell</p>
-              <p className="text-white/70">Founder & Principal Engineer</p>
+            <MintPanel className="flex flex-1 flex-col">
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Jeremy Garrell
+              </p>
+              <p className="text-gray-500 dark:text-gray-400">Founder & Principal Engineer</p>
               <dl className="mt-3 space-y-1.5">
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Email</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Email</dt>
                   <dd>
-                    <a
-                      href="mailto:jeremy@garrellts.com"
-                      className="hover:text-gold hover:underline"
-                    >
+                    <a href="mailto:jeremy@garrellts.com" className={`hover:underline ${PRIMARY}`}>
                       jeremy@garrellts.com
                     </a>
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Phone</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Phone</dt>
                   <dd>
-                    <a href="tel:+12014007782" className="hover:text-gold hover:underline">
+                    <a href="tel:+12014007782" className={`hover:underline ${PRIMARY}`}>
                       (201) 400-7782
                     </a>
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Location</dt>
-                  <dd>Coral Springs, FL 33065</dd>
+                  <dt className="text-gray-500 dark:text-gray-400">Location</dt>
+                  <dd className="text-gray-900 dark:text-gray-100">Coral Springs, FL 33065</dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="text-white/70">Web</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Web</dt>
                   <dd>
-                    <a href="https://garrellts.com" className="hover:text-gold hover:underline">
+                    <a href="https://garrellts.com" className={`hover:underline ${PRIMARY}`}>
                       garrellts.com
                     </a>
                   </dd>
@@ -512,7 +511,7 @@ export default function HomePage() {
               >
                 Book a 30-Minute Call
               </a>
-            </div>
+            </MintPanel>
           </section>
         </div>
       </div>
