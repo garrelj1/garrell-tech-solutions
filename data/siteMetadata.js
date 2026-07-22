@@ -10,7 +10,7 @@ const siteMetadata = {
   siteRepo: 'https://github.com/garrelj1/garrell-tech-solutions',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
-  email: 'jeremy.garrell@gmail.com',
+  email: 'jeremy@garrellts.com',
   github: 'https://github.com/garrelj1',
   x: 'https://twitter.com/x',
   // twitter: 'https://twitter.com/Twitter',
