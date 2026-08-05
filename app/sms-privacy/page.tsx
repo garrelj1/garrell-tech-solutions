@@ -42,9 +42,18 @@ export default function Page() {
         <h2>How we use it</h2>
         <p>
           We use this number solely to send SMS lead-alert notifications for that owner&apos;s
-          website — one message each time a visitor submits the contact form on their site. We do
-          not use it for any other purpose.
+          website. We do not use it for any other purpose.
         </p>
+
+        <h2>Message frequency</h2>
+        <p>
+          Message frequency varies with how many leads a subscriber&apos;s website receives — one
+          message per lead, not a fixed number per month. Some periods may include no messages at
+          all.
+        </p>
+
+        <h2>Message and data rates</h2>
+        <p>Message and data rates may apply.</p>
 
         <h2>No sharing for marketing</h2>
         <p>
