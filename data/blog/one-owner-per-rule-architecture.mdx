@@ -46,7 +46,7 @@ A central policy service and shared TS↔Rust logic both got rejected. A shared 
 
 A register of known violations, one row per issue, can only shrink: every unit of work removes at least one row and adds none. I call it the ratchet. It let this migration run without a freeze, and held up under real pressure: an unrelated summarization feature drained two rows just by doing its job well, deleting a cron-based gating function once that decision lived naturally inside a long-running worker.
 
-That's the same discipline behind most of the [system-design and platform work I do at Garrell Tech Solutions](/): not a bigger framework, but a rule specific enough that nobody has to argue about where a decision belongs.
+That's the same discipline behind most of the [system-design and platform work I do at Garrell Tech Solutions](https://garrellts.com): not a bigger framework, but a rule specific enough that nobody has to argue about where a decision belongs.
 
 ## FAQ
 
