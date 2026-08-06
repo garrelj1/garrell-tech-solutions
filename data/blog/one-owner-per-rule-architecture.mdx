@@ -7,7 +7,7 @@ draft: false
 summary: A PR audit found the same business rule duplicated across two runtimes. Here's the ownership rule, and the ratchet, that stopped it from happening again.
 ---
 
-My side project, a legal-research app called Laymans Lawyer, runs on three runtimes that can each start work and decide something: TypeScript on [Cloudflare Workers](https://developers.cloudflare.com/workers/), Rust background workers, and Postgres itself, through [pg_cron](https://github.com/citusdata/pg_cron) jobs, enqueue functions, and classification views. A routine PR audit turned up a business rule duplicated across two of those runtimes, and a migration comment that described the duplication as unavoidable. It wasn't. The fix was a rule that gives every piece of logic exactly one legal home, based on the role it plays rather than which runtime happens to be running it, enforced in CI by checking the system against a declared shape instead of scanning code for bad patterns.
+My side project, a legal-research app called [Laymans Lawyer](https://laymanslawyer.app/), runs on three runtimes that can each start work and decide something: TypeScript on [Cloudflare Workers](https://developers.cloudflare.com/workers/), Rust background workers, and Postgres itself, through [pg_cron](https://github.com/citusdata/pg_cron) jobs, enqueue functions, and classification views. A routine PR audit turned up a business rule duplicated across two of those runtimes, and a migration comment that described the duplication as unavoidable. It wasn't. The fix was a rule that gives every piece of logic exactly one legal home, based on the role it plays rather than which runtime happens to be running it, enforced in CI by checking the system against a declared shape instead of scanning code for bad patterns.
 
 ## What made three decision-making runtimes a real problem?
 
@@ -105,6 +105,7 @@ Because enforcement here is CI-based, not prose-based: checks compare the system
 
 ## Sources
 
+- [Laymans Lawyer](https://laymanslawyer.app/)
 - [pg_cron – Citus Data](https://github.com/citusdata/pg_cron)
 - [PostgreSQL Documentation – Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
