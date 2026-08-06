@@ -1,0 +1,110 @@
+---
+title: How I Decided Which Runtime Owns a Business Rule
+date: '2026-08-06'
+lastmod: '2026-08-06'
+tags: ['software-architecture', 'postgres', 'cloudflare-workers', 'rust', 'system-design']
+draft: false
+summary: A PR audit found the same business rule duplicated across two runtimes. Here's the ownership rule, and the ratchet, that stopped it from happening again.
+---
+
+My side project, a legal-research app called Laymans Lawyer, runs on three runtimes that can each start work and decide something: TypeScript on [Cloudflare Workers](https://developers.cloudflare.com/workers/), Rust background workers, and Postgres itself, through [pg_cron](https://github.com/citusdata/pg_cron) jobs, enqueue functions, and classification views. A routine PR audit turned up a business rule duplicated across two of those runtimes, and a migration comment that described the duplication as unavoidable. It wasn't. The fix was a rule that gives every piece of logic exactly one legal home, based on the role it plays rather than which runtime happens to be running it, enforced in CI by checking the system against a declared shape instead of scanning code for bad patterns.
+
+## What made three decision-making runtimes a real problem?
+
+I was auditing a merged PR on notification provenance handling, and the audit kept widening. The actual issue wasn't in that PR. It was that my system has three runtimes that can each initiate work and decide what should happen: TypeScript on Cloudflare Workers, Rust background workers, and Postgres, with 9 pg_cron jobs, enqueue functions that gate on conditions, and views that classify data. For any new rule, there were three legal places to put it and no rule for choosing between them. In a spec-to-code-to-QA pipeline where different people, or agents, touch the code over time, "wherever the last person put it" isn't a policy. It's drift.
+
+The detail that convinced me this was a real problem and not a theoretical one: a migration file's own comment described a piece of duplicated business logic, a spend-cap check that existed in both a SQL view and a Rust function, as "unavoidable across the language boundary." That's a placement mistake recorded as if it were a law of nature. Postgres was pulling in logic simply because it was the one thing all three runtimes could reach, the path of least resistance, not the correct owner.
+
+## What test does an ownership rule actually have to pass?
+
+The bar I set for any fix: for any new rule, can you name exactly one runtime that owns it, without discussion? The system's existing informal split, web handles user-facing things and Rust handles background things, failed that test. It splits logic by when the work happens, not by what owns the decision, so anything that has both a user-facing and a background component, like summarization, straddled the line and could plausibly live in either place.
+
+## How does decomposing by role, instead of runtime, fix it?
+
+Every piece of logic in the system got reclassified into one of ten roles, each with exactly one legal home:
+
+| Role          | What it is                                                                                        | Lives in                                    |
+| ------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Facts         | What happened; meaning never changes                                                              | DB tables                                   |
+| Retrieval     | Assembling facts into the shape a decision needs (joins/aggregates), no conditionals over config  | DB views/queries                            |
+| Configuration | Tunable values that policy reads                                                                  | config tables / env, never literals in code |
+| Policy        | Deciding what facts mean and what should happen; pure, no I/O                                     | app-side policy modules                     |
+| Mechanism     | Making an effect happen exactly once; deliberately dumb                                           | DB transactions/queue/unique constraints    |
+| Effect        | The outward action                                                                                | app code / workers                          |
+| Adapter (in)  | Translates an external arrival into a use-case call; validation/auth only, no decisions           | webhook routes, cron-triggered handlers     |
+| Use case      | The named operation; orchestrates Retrieval → Policy → Mechanism → Effect, decides nothing itself | domain use-case files                       |
+| Presentation  | How a decision looks, formatting only, no business meaning                                        | UI components                               |
+| View state    | Local interaction state (expanded/pending/draft)                                                  | UI components/hooks                         |
+
+Two consequences fell out of that table rather than needing to be argued separately.
+
+## Why does ownership follow the effect, instead of getting assigned by committee?
+
+Look at the table and only two roles, Policy and Effect, need a runtime owner at all. Everything else is database or data. So the rule became: whichever runtime performs the Effect owns the Policy for that effect. That single naming rule, not a shared service, became the whole mechanism for preventing duplication.
+
+I checked it against the actual codebase. With the rule applied, exactly one duplicated business rule was left, the spend-cap check mentioned above, and it showed up as the one flagged exception, not as proof the rule doesn't work.
+
+## Why doesn't the UI get to make any decisions?
+
+The second consequence: the UI renders decisions, it never makes them. The discriminator I used to sort logic into Policy versus Presentation: if a product decision could change the answer, it's Policy, and it doesn't belong in the frontend. If only locale or viewport could change it, it's Presentation, and formatting logic like `toLocaleDateString` is fine there. Classifying something as "stuck" or "overdue," on the other hand, is a product decision wearing a formatting costume, and it belongs in Policy.
+
+There's one deliberate, named exception to all of this: database [row-level security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html) stays in the database on purpose. Postgres's own docs describe row security policies as ones that "restrict, on a per-user basis, which rows can be returned by normal queries or inserted, updated, or deleted by data modification commands." I keep that as defense-in-depth for when application code gets the authorization decision wrong. Naming it as an explicit exception mattered: an unstated exception is what erodes a rule's credibility over time.
+
+## Why not build a shared policy service, or share logic between TypeScript and Rust?
+
+Both came up in the room, and both got rejected, along with a couple of other tempting shortcuts:
+
+| Option considered                                                                     | Why it was rejected                                                                                                                | What shipped instead                                                                                          |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| A separate central policy service                                                     | Latency on the money-spending path, a partial-failure mode, version skew between services, a whole second thing to deploy          | The ownership rule (whichever runtime performs the Effect owns the Policy), which solves duplication for free |
+| Shared TS↔Rust policy logic, just "minimized"                                        | Rejected as the goal itself, not merely as impractical                                                                             | Zero shared policy logic, permanently, enforced by the ownership rule rather than by discipline               |
+| "Conformance-tested duplication" (write the logic twice, test that both copies agree) | Proves the duplication is consistent, not that it should exist                                                                     | Rejected outright                                                                                             |
+| A new scheduler for background jobs                                                   | Two cron jobs already followed the right pattern in production: clock triggers an HTTP call, application code decides what happens | Extend that existing pattern to the rest of the system instead of building new scheduling infrastructure      |
+
+The TS↔Rust line was the strongest, most repeated point in the whole discussion. Not "minimize duplication," zero, permanently.
+
+## How do you enforce an architecture rule so it doesn't rot in six months?
+
+Enforcement is CI-based, and it works by comparing reality to a declaration, never by pattern-matching for "badness." Earlier drafts of this imagined a growing list of grep-style checks for known-bad patterns. I rejected that approach, because pattern matching only ever proves the absence of the spellings you thought of.
+
+A real example from this codebase makes the point: a check meant to ban a certain SQL reference used a text search, `ilike '%vault.%'`, and a quoted identifier, `"vault"."x"`, sailed straight through it. The replacement approach declares the legal shape of the system, which layers may import which, which cron jobs should exist and in what state, and asserts that the system matches the declaration. For the cron jobs specifically, that means checking the database's own catalog for which jobs actually exist and whether they're active, rather than scanning file text for suspicious strings.
+
+## How do you migrate a live system without freezing feature work?
+
+The allowlist of pre-existing violations and the register of "things we haven't fixed yet" are the same file. One row per known violation, so technical debt is visible by construction instead of living in someone's head.
+
+That register can only shrink, because of one rule: every unit of work in this effort has to remove at least one row from the register, and may add none. I call it the ratchet. It's what keeps this kind of migration from stalling out as an abandoned big-bang rewrite. Each slice of work is small, provably makes progress, and normal feature work can keep running in parallel around it instead of waiting on a freeze.
+
+## Did the ratchet actually hold up once real work ran through it?
+
+A few things surfaced once real work started running through this, worth including because they show the rule under actual pressure rather than staying theoretical.
+
+The ratchet created a real, immediate tension: almost every entry in the violation register belonged to this architecture effort itself, so other, unrelated work touching the same code had no legitimate row to remove, technically compliant with neither half of the ratchet. I surfaced that explicitly rather than quietly working around it, and resolved it case by case.
+
+A later, unrelated feature, automated summarization scheduling, ended up organically draining two rows from the register just by doing its own job well. It deleted a cron-based gating function outright, because the same decision now lived naturally inside a long-running worker process. That's the shape this migration is supposed to take: progress as a side effect of ordinary feature work, not a dedicated rewrite team.
+
+The same feature also showed that one of the planned future steps was cheaper than expected. One enqueuer needed no new "adapter" plumbing at all, because its consumer was already a long-running poll loop rather than a cron-triggered one-shot.
+
+None of that was the point of building the summarization feature. It just happened, because the register made the debt visible and the ratchet made removing it the path of least resistance, the same gravity that used to pull logic into Postgres now pulls it out of the register instead.
+
+That's the same discipline behind most of the [system-design and platform work I do at Garrell Tech Solutions](/): not a bigger framework, but a rule specific enough that two people, or a person and an agent, never have to argue about where a decision belongs.
+
+## FAQ
+
+**Does this mean Postgres can never hold business logic?**
+No. Under this scheme, Facts, Retrieval, and Mechanism are meant to live in the database, and Configuration lives in config tables or env, never as literals in code. What Postgres shouldn't hold is Policy, the part that decides what should happen. Row-level security is the one named exception, kept in the database on purpose as defense-in-depth for when application code gets an authorization decision wrong.
+
+**What's the actual difference between Policy and Mechanism here?**
+Policy decides what should happen: it's pure, has no I/O, and reads Configuration to make that call. Mechanism just makes an effect happen exactly once, using tools like database transactions, queues, or unique constraints. Mechanism is deliberately dumb; it doesn't decide anything, it just guarantees an already-made decision executes once.
+
+**Does the ratchet rule slow down feature work that has nothing to do with the migration?**
+It creates friction, not a freeze. In practice, almost every row in the violation register belonged to the architecture effort itself, so unrelated work touching the same code sometimes had no legitimate row of its own to remove. That tension gets resolved case by case rather than blocking the feature, and in at least one case, a feature ended up draining register rows just by being built well.
+
+**Why enforce this with CI checks instead of just writing it down as a convention?**
+Because enforcement here is CI-based, not prose-based: checks compare the system against a declared shape instead of relying on a written rule. A pattern-matching version of that check already failed once: a text search for `vault.` missed a quoted identifier like `"vault"."x"` entirely. Declaring the legal shape of the system and asserting that reality matches it is what survived that failure mode.
+
+## Sources
+
+- [pg_cron – Citus Data](https://github.com/citusdata/pg_cron)
+- [PostgreSQL Documentation – Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/)
