@@ -1,0 +1,65 @@
+---
+title: How I Decided Which Runtime Owns a Business Rule
+date: '2026-08-06'
+lastmod: '2026-08-06'
+tags: ['software-architecture', 'postgres', 'cloudflare-workers', 'rust', 'system-design']
+draft: false
+summary: A PR audit found the same business rule duplicated across two runtimes. Here's the ownership rule, and the ratchet, that stopped it from happening again.
+---
+
+My side project, a legal-research app called [Laymans Lawyer](https://laymanslawyer.app/), runs on three runtimes that can each start work and decide something: TypeScript on [Cloudflare Workers](https://developers.cloudflare.com/workers/), Rust background workers, and Postgres itself, through [pg_cron](https://github.com/citusdata/pg_cron) jobs, enqueue functions, and classification views. A routine PR audit turned up a business rule duplicated across two of those runtimes, and a migration comment that described the duplication as unavoidable. It wasn't. The fix was a rule that gives every piece of logic exactly one legal home, based on the role it plays rather than which runtime happens to be running it, enforced in CI by checking the system against a declared shape instead of scanning code for bad patterns.
+
+## What made three decision-making runtimes a real problem?
+
+I was auditing a merged PR on notification provenance handling, and the audit kept widening. The actual issue wasn't in that PR. It was that my system has three runtimes that can each initiate work and decide what should happen: TypeScript on Cloudflare Workers, Rust background workers, and Postgres, with 9 pg_cron jobs, enqueue functions that gate on conditions, and views that classify data. For any new rule, there were three legal places to put it and no rule for choosing between them. In a spec-to-code-to-QA pipeline where different people, or [agents](https://github.com/garrelj1/swarm-forge), touch the code over time, "wherever the last person put it" isn't a policy. It's drift.
+
+The detail that convinced me this was a real problem and not a theoretical one: a migration file's own comment described a piece of duplicated business logic, a spend-cap check that existed in both a SQL view and a Rust function, as "unavoidable across the language boundary." That's a placement mistake recorded as if it were a law of nature. Postgres was pulling in logic simply because it was the one thing all three runtimes could reach, the path of least resistance, not the correct owner.
+
+## What test does an ownership rule actually have to pass?
+
+The bar I set for any fix: for any new rule, can you name exactly one runtime that owns it, without discussion? The system's existing informal split, web handles user-facing things and Rust handles background things, failed that test. It splits logic by when the work happens, not by what owns the decision, so anything that has both a user-facing and a background component, like summarization, straddled the line and could plausibly live in either place.
+
+## How does decomposing by role, instead of runtime, fix it?
+
+Every piece of logic in the system got reclassified into one of ten roles, each with exactly one legal home:
+
+| Role          | What it is                                                                                        | Lives in                                    |
+| ------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Facts         | What happened; meaning never changes                                                              | DB tables                                   |
+| Retrieval     | Assembling facts into the shape a decision needs (joins/aggregates), no conditionals over config  | DB views/queries                            |
+| Configuration | Tunable values that policy reads                                                                  | config tables / env, never literals in code |
+| Policy        | Deciding what facts mean and what should happen; pure, no I/O                                     | app-side policy modules                     |
+| Mechanism     | Making an effect happen exactly once; deliberately dumb                                           | DB transactions/queue/unique constraints    |
+| Effect        | The outward action                                                                                | app code / workers                          |
+| Adapter (in)  | Translates an external arrival into a use-case call; validation/auth only, no decisions           | webhook routes, cron-triggered handlers     |
+| Use case      | The named operation; orchestrates Retrieval → Policy → Mechanism → Effect, decides nothing itself | domain use-case files                       |
+| Presentation  | How a decision looks, formatting only, no business meaning                                        | UI components                               |
+| View state    | Local interaction state (expanded/pending/draft)                                                  | UI components/hooks                         |
+
+## What two rules fall out of that table?
+
+Only Policy and Effect need a runtime owner; everything else is database or data. The rule: whichever runtime performs the Effect owns the Policy for it, one naming rule, not a shared service. And the UI renders decisions, it never makes them: if a product decision could change the answer, it's Policy, not Presentation. One deliberate exception: database [row-level security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html), kept on purpose as defense-in-depth for when application code gets an authorization decision wrong.
+
+A central policy service and shared TS↔Rust logic both got rejected. A shared service would add latency on the money-spending path for a problem the ownership rule already solves. Shared logic between TypeScript and Rust wasn't minimized, it went to zero, permanently. And enforcement is CI-based, not prose-based: checks compare the system to a declared shape, not pattern-matching for "badness."
+
+## How do you migrate a live system without freezing feature work?
+
+A register of known violations, one row per issue, can only shrink: every unit of work removes at least one row and adds none. I call it the ratchet. It let this migration run without a freeze, and held up under real pressure: an unrelated summarization feature drained two rows just by doing its job well, deleting a cron-based gating function once that decision lived naturally inside a long-running worker.
+
+That's the same discipline behind most of the [system-design and platform work I do at Garrell Tech Solutions](https://garrellts.com): not a bigger framework, but a rule specific enough that nobody has to argue about where a decision belongs.
+
+## FAQ
+
+**Does this mean Postgres can never hold business logic?**
+No. Facts, Retrieval, and Mechanism still live in the database; Configuration lives in config tables or env. What Postgres shouldn't hold is Policy, the part that decides what should happen. Row-level security is the one named exception.
+
+**What's the actual difference between Policy and Mechanism here?**
+Policy decides what should happen: pure, no I/O. Mechanism just makes an effect happen exactly once, via database transactions, queues, or unique constraints. It doesn't decide anything, it just guarantees an already-made decision executes once.
+
+## Sources
+
+- [Laymans Lawyer](https://laymanslawyer.app/)
+- [swarm-forge](https://github.com/garrelj1/swarm-forge)
+- [pg_cron – Citus Data](https://github.com/citusdata/pg_cron)
+- [PostgreSQL Documentation – Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/)
