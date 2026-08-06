@@ -11,7 +11,7 @@ My side project, a legal-research app called [Laymans Lawyer](https://laymanslaw
 
 ## What made three decision-making runtimes a real problem?
 
-I was auditing a merged PR on notification provenance handling, and the audit kept widening. The actual issue wasn't in that PR. It was that my system has three runtimes that can each initiate work and decide what should happen: TypeScript on Cloudflare Workers, Rust background workers, and Postgres, with 9 pg_cron jobs, enqueue functions that gate on conditions, and views that classify data. For any new rule, there were three legal places to put it and no rule for choosing between them. In a spec-to-code-to-QA pipeline where different people, or agents, touch the code over time, "wherever the last person put it" isn't a policy. It's drift.
+I was auditing a merged PR on notification provenance handling, and the audit kept widening. The actual issue wasn't in that PR. It was that my system has three runtimes that can each initiate work and decide what should happen: TypeScript on Cloudflare Workers, Rust background workers, and Postgres, with 9 pg_cron jobs, enqueue functions that gate on conditions, and views that classify data. For any new rule, there were three legal places to put it and no rule for choosing between them. In a spec-to-code-to-QA pipeline where different people, or [agents](https://github.com/garrelj1/swarm-forge), touch the code over time, "wherever the last person put it" isn't a policy. It's drift.
 
 The detail that convinced me this was a real problem and not a theoretical one: a migration file's own comment described a piece of duplicated business logic, a spend-cap check that existed in both a SQL view and a Rust function, as "unavoidable across the language boundary." That's a placement mistake recorded as if it were a law of nature. Postgres was pulling in logic simply because it was the one thing all three runtimes could reach, the path of least resistance, not the correct owner.
 
@@ -106,6 +106,7 @@ Because enforcement here is CI-based, not prose-based: checks compare the system
 ## Sources
 
 - [Laymans Lawyer](https://laymanslawyer.app/)
+- [swarm-forge](https://github.com/garrelj1/swarm-forge)
 - [pg_cron – Citus Data](https://github.com/citusdata/pg_cron)
 - [PostgreSQL Documentation – Row Security Policies](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
