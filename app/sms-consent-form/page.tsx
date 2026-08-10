@@ -5,7 +5,7 @@ import { genPageMetadata } from 'app/seo'
 export const metadata = genPageMetadata({
   title: 'SMS Opt-In Methods (Reference)',
   description:
-    'Reference copy of the verbal script and paper form used to enroll business owners in the SMS lead-alert notification program.',
+    'Reference copy of the verbal script and paper form used to enroll business owners in the SMS inquiry notification program.',
   robots: {
     index: false,
     follow: false,
@@ -28,12 +28,12 @@ export default function Page() {
       <div className="py-12">
         <div className="prose dark:prose-invert max-w-none">
           <p>
-            Garrell Tech Solutions enrolls business owners in its SMS lead-alert notification
-            program two ways: a verbal opt-in read during onboarding, or a signed paper form
-            completed in person. Neither is a public web form — this page exists only so reviewers
-            can see the exact consent language used. Signed originals and records of verbal consent
-            are retained by Garrell Tech Solutions as private internal business records and are
-            never published here.
+            Garrell Tech Solutions enrolls business owners in its SMS inquiry notification program
+            two ways: a verbal opt-in read during onboarding, or a signed paper form completed in
+            person. Neither is a public web form — this page exists only so reviewers can see the
+            exact consent language used. Signed originals and records of verbal consent are retained
+            by Garrell Tech Solutions as private internal business records and are never published
+            here.
           </p>
 
           <h2>Verbal opt-in script</h2>
@@ -46,12 +46,12 @@ export default function Page() {
             means:
           </p>
           <p className="mt-4">
-            This is <strong>Garrell Tech Solutions</strong>&apos; lead-alert service for your
-            website. Once you&apos;re set up, we&apos;ll send a text to this number every time a
-            visitor submits the contact form on your website — one message per lead, with the
-            visitor&apos;s name, phone number, and requested pickup window. That&apos;s not a fixed
-            number per month; it&apos;s driven by how many leads your site gets, so it could be
-            several a week or none.
+            This is <strong>Garrell Tech Solutions</strong>&apos; inquiry notification service for
+            your website. Once you&apos;re set up, we&apos;ll send a text to this number every time
+            a visitor submits an inquiry through the contact form on your website — one message per
+            inquiry, with the visitor&apos;s name, phone number, and requested pickup window.
+            That&apos;s not a fixed number per month; it&apos;s driven by how many inquiries your
+            site gets, so it could be several a week or none.
           </p>
           <p className="mt-4">
             Standard message and data rates may apply. Reply HELP at any time for help, or STOP to
@@ -61,7 +61,7 @@ export default function Page() {
           </p>
           <p className="mt-4">
             This is optional — if you&apos;d rather not, that&apos;s completely fine, your website
-            and email lead alerts work exactly the same either way.
+            and email notifications work exactly the same either way.
           </p>
           <p className="mt-4">
             Do you consent to receive these text alerts at this number — yes or no?&rdquo;
@@ -71,7 +71,7 @@ export default function Page() {
         <div className="prose dark:prose-invert mt-4 max-w-none">
           <p>
             On a <strong>yes</strong>: &ldquo;Great — you&apos;re enrolled. You&apos;ll get your
-            first alert the next time a visitor submits your form. Reply STOP anytime to opt
+            first alert the next time a visitor submits an inquiry. Reply STOP anytime to opt
             out.&rdquo; On a <strong>no</strong> or unclear answer, the number is not added — the
             business keeps the service, just without SMS alerts.
           </p>
@@ -108,7 +108,7 @@ function ConsentFormCard({ sample = false }: { sample?: boolean }) {
   return (
     <div className="mt-4 max-w-xl rounded-lg border-2 border-gray-300 p-8 dark:border-gray-600">
       <h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
-        Garrell Tech Solutions — SMS Lead Alert Enrollment{sample ? ' (SAMPLE)' : ''}
+        Garrell Tech Solutions — SMS Inquiry Alert Enrollment{sample ? ' (SAMPLE)' : ''}
       </h3>
 
       <div className="space-y-4 text-gray-800 dark:text-gray-200">
@@ -139,9 +139,9 @@ function ConsentFormCard({ sample = false }: { sample?: boolean }) {
 
         <p>
           <strong>What this is:</strong> Garrell Tech Solutions will text this number every time a
-          visitor submits the contact form on your website — one message per lead (name, phone,
-          requested pickup window). Frequency depends on your site&apos;s lead volume, not a fixed
-          count.
+          visitor submits an inquiry through the contact form on your website — one message per
+          inquiry (name, phone, requested pickup window). Frequency depends on your site&apos;s
+          inquiry volume, not a fixed count.
         </p>
 
         <p>
@@ -150,7 +150,7 @@ function ConsentFormCard({ sample = false }: { sample?: boolean }) {
           <strong>Your mobile number will not be shared or sold.</strong>
         </p>
 
-        <p>This is optional — declining does not affect your website or email lead alerts.</p>
+        <p>This is optional — declining does not affect your website or email notifications.</p>
 
         <p>
           Privacy Policy: <a href="https://garrellts.com/sms-privacy">garrellts.com/sms-privacy</a>
