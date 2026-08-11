@@ -5,7 +5,7 @@ import { genPageMetadata } from 'app/seo'
 export const metadata = genPageMetadata({
   title: 'SMS Privacy Policy',
   description:
-    'How Garrell Tech Solutions handles phone numbers collected for its SMS lead-alert notification program.',
+    'How Garrell Tech Solutions handles phone numbers collected for its SMS inquiry notification program.',
   robots: {
     index: false,
     follow: false,
@@ -27,7 +27,7 @@ export default function Page() {
       </div>
       <div className="prose dark:prose-invert max-w-none py-12">
         <p>
-          This policy covers only Garrell Tech Solutions&apos; SMS lead-alert notification program,
+          This policy covers only Garrell Tech Solutions&apos; SMS inquiry notification program,
           described below. It does not cover other data practices on this site — for general privacy
           questions, contact us at <a href={`mailto:${siteMetadata.email}`}>{siteMetadata.email}</a>
           .
@@ -35,21 +35,21 @@ export default function Page() {
 
         <h2>What we collect</h2>
         <p>
-          When a business owner enrolls in our lead-alert SMS service, we collect the mobile phone
-          number (and name) they provide for that purpose.
+          When a business owner enrolls in our inquiry notification SMS service, we collect the
+          mobile phone number (and name) they provide for that purpose.
         </p>
 
         <h2>How we use it</h2>
         <p>
-          We use this number solely to send SMS lead-alert notifications for that owner&apos;s
-          website. We do not use it for any other purpose.
+          We use this number solely to send SMS inquiry notifications for that owner&apos;s website.
+          We do not use it for any other purpose.
         </p>
 
         <h2>Message frequency</h2>
         <p>
-          Message frequency varies with how many leads a subscriber&apos;s website receives — one
-          message per lead, not a fixed number per month. Some periods may include no messages at
-          all.
+          Message frequency varies with how many inquiries a subscriber&apos;s website receives —
+          one message per inquiry, not a fixed number per month. Some periods may include no
+          messages at all.
         </p>
 
         <h2>Message and data rates</h2>
@@ -65,8 +65,8 @@ export default function Page() {
 
         <h2>Opting out</h2>
         <p>
-          Reply <strong>STOP</strong> at any time to a lead-alert text to opt out of the program.
-          Reply <strong>HELP</strong> for help, or contact us at{' '}
+          Reply <strong>STOP</strong> at any time to an inquiry alert text to opt out of the
+          program. Reply <strong>HELP</strong> for help, or contact us at{' '}
           <a href={`mailto:${siteMetadata.email}`}>{siteMetadata.email}</a>.
         </p>
 

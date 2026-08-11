@@ -4,7 +4,7 @@ import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({
   title: 'SMS Terms & Conditions',
-  description: 'Terms governing Garrell Tech Solutions’ SMS lead-alert notification program.',
+  description: 'Terms governing Garrell Tech Solutions’ SMS inquiry notification program.',
   robots: {
     index: false,
     follow: false,
@@ -27,8 +27,8 @@ export default function Page() {
       <div className="prose dark:prose-invert max-w-none py-12">
         <h2>Program description</h2>
         <p>
-          Garrell Tech Solutions&apos; lead-alert SMS service sends a text message to an enrolled
-          business owner each time a visitor submits the contact form on their website.
+          Garrell Tech Solutions&apos; inquiry notification SMS service sends a text message to an
+          enrolled business owner each time a visitor submits the contact form on their website.
         </p>
 
         <h2>Eligibility</h2>
@@ -39,9 +39,9 @@ export default function Page() {
 
         <h2>Message frequency</h2>
         <p>
-          Message frequency varies with how many leads a subscriber&apos;s website receives — one
-          message per lead, not a fixed number per month. Some periods may include no messages at
-          all.
+          Message frequency varies with how many inquiries a subscriber&apos;s website receives —
+          one message per inquiry, not a fixed number per month. Some periods may include no
+          messages at all.
         </p>
 
         <h2>Cost</h2>
