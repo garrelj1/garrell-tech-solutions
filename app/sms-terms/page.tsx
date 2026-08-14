@@ -47,6 +47,20 @@ export default function Page() {
         <h2>Cost</h2>
         <p>Message and data rates may apply.</p>
 
+        <h2>No sharing for marketing</h2>
+        <p>
+          No mobile information will be shared with third parties or affiliates for marketing or
+          promotional purposes. Information sharing to subcontractors for support services (e.g.,
+          customer service) is permitted. All other categories exclude text messaging originator
+          opt-in data and consent from being shared with any third parties.
+        </p>
+
+        <h2>Privacy</h2>
+        <p>
+          How we handle enrolled phone numbers is described in our{' '}
+          <a href="/sms-privacy">SMS Privacy Policy</a>.
+        </p>
+
         <h2>Opting out</h2>
         <p>
           Reply <strong>STOP</strong> at any time to opt out of this program.
