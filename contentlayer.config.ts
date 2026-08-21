@@ -147,9 +147,52 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
+export const Doc = defineDocumentType(() => ({
+  name: 'Doc',
+  filePathPattern: 'docs/**/*.md',
+  contentType: 'markdown',
+  fields: {
+    title: { type: 'string', required: true },
+    summary: { type: 'string' },
+    date: { type: 'date', required: true },
+    lastmod: { type: 'date' },
+    draft: { type: 'boolean' },
+  },
+  computedFields: {
+    slug: {
+      type: 'string',
+      resolve: (doc) => doc._raw.flattenedPath.replace(/^docs\//, ''),
+    },
+    path: {
+      type: 'string',
+      resolve: (doc) => doc._raw.flattenedPath,
+    },
+    filePath: {
+      type: 'string',
+      resolve: (doc) => doc._raw.sourceFilePath,
+    },
+  },
+}))
+
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, Doc],
+  markdown: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'prepend',
+          headingProperties: {
+            className: ['content-header'],
+          },
+          content: icon,
+        },
+      ],
+    ],
+  },
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
