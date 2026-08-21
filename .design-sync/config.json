@@ -1,0 +1,16 @@
+{
+  "projectId": "2e718b41-01f6-4aca-a2a4-28e4f49a0c4c",
+  "shape": "package",
+  "pkg": "@gts/design-system",
+  "globalName": "GTSDesignSystem",
+  "buildCmd": "npm --prefix design-system run build",
+  "cssEntry": "dist/styles.css",
+  "extraFonts": ["src/fonts/space-grotesk.css"],
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "DefinitionList": { "cardMode": "column" },
+    "DefinitionRow": { "cardMode": "column" },
+    "MintPanel": { "cardMode": "column" },
+    "Tag": { "cardMode": "column" }
+  }
+}

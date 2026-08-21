@@ -1,0 +1,140 @@
+@import 'tailwindcss';
+@import './fonts/space-grotesk.css';
+
+/* Scan the design system's own components, plus the preview compositions the
+   design-sync converter compiles into preview cards, so utilities used only in a
+   preview still make it into the compiled stylesheet. */
+@source './**/*.tsx';
+@source '../../.design-sync/previews/**/*.tsx';
+
+/* Safelist. Scanning alone only emits utilities the components happen to use, which
+   would leave anything composing WITH this design system silently unstyled. These
+   keep the brand palette and the ordinary layout vocabulary available. */
+@source inline(
+  '{,dark:,hover:,dark:hover:,group-hover:}{bg,text,border,divide,ring,outline,decoration}-{primary-{50,100,200,300,400,500,600,700,800,900,950},gold,mint,gray-{50,100,200,300,400,500,600,700,800,900,950},white,black,transparent,current}'
+);
+@source inline(
+  '{,sm:,md:,lg:,xl:}{p,px,py,pt,pb,pl,pr,m,mx,my,mt,mb,ml,mr,gap,gap-x,gap-y,space-x,space-y}-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,10,12,14,16,20,24,28,32}'
+);
+@source inline(
+  '{,sm:,md:,lg:,xl:}text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl,left,center,right}'
+);
+@source inline(
+  '{,sm:,md:,lg:,xl:}{grid-cols,col-span}-{1,2,3,4,5,6,7,8,9,10,11,12}'
+);
+@source inline(
+  '{,sm:,md:,lg:,xl:}{flex,grid,block,inline-block,inline-flex,hidden,flex-col,flex-row,flex-wrap,items-start,items-center,items-baseline,items-end,justify-start,justify-center,justify-between,justify-end,text-balance,text-pretty,sr-only}'
+);
+@source inline(
+  'font-{light,normal,medium,semibold,bold,extrabold}'
+);
+@source inline(
+  'tracking-{tighter,tight,normal,wide,wider,widest}'
+);
+@source inline(
+  'leading-{none,tight,snug,normal,relaxed,loose,3,4,5,6,7,8,9,10,11,12,13,14}'
+);
+@source inline(
+  'rounded{,-none,-sm,-md,-lg,-xl,-2xl,-3xl,-full}'
+);
+@source inline(
+  '{border,border-t,border-b,border-l,border-r}{,-0,-2,-4,-8}'
+);
+@source inline(
+  '{w,h}-{full,auto,screen,fit,px,0,1,2,3,4,5,6,7,8,10,12,16,20,24,32,40,48,56,64,72,80,96}'
+);
+@source inline(
+  '{,sm:,md:,lg:,xl:}max-w-{none,xs,sm,md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl,full,prose}'
+);
+/* Opacity modifiers are how gold and mint are shaded, since neither has a ramp. */
+@source inline(
+  '{,dark:,hover:,dark:hover:}{bg,text,border}-{gold,mint,primary-300,primary-800,primary-900,gray-100,gray-900,black,white}/{5,10,20,30,40,50,60,70,80,90,95}'
+);
+@source inline(
+  '{uppercase,lowercase,capitalize,normal-case,italic,not-italic,underline,no-underline,line-through,truncate,antialiased,relative,absolute,fixed,sticky,overflow-hidden,overflow-x-auto,overflow-y-auto,shrink-0,grow,mx-auto,list-disc,list-none,divide-y,divide-x,shadow-sm,shadow,shadow-md,shadow-lg,transition,transition-colors,duration-150,duration-200,duration-300}'
+);
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Core theme configuration.
+   Brand ramp derived from the GTS logo: green #0F4E0F (primary-800),
+   gold #CFA821, mint #E4F9F5. */
+@theme {
+  --font-sans:
+    'Space Grotesk', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --color-primary-50: oklch(0.975 0.015 142.9);
+  --color-primary-100: oklch(0.95 0.035 142.9);
+  --color-primary-200: oklch(0.895 0.06 142.9);
+  --color-primary-300: oklch(0.815 0.085 142.9);
+  --color-primary-400: oklch(0.72 0.105 142.9);
+  --color-primary-500: oklch(0.61 0.12 142.9);
+  --color-primary-600: oklch(0.52 0.122 142.9);
+  --color-primary-700: oklch(0.43 0.118 142.9);
+  --color-primary-800: oklch(0.3714 0.1122 142.9);
+  --color-primary-900: oklch(0.28 0.09 142.9);
+  --color-primary-950: oklch(0.19 0.065 142.9);
+
+  --color-gold: oklch(0.7461 0.1447 90.89);
+  --color-mint: oklch(0.9656 0.0226 183.19);
+
+  --color-gray-50: oklch(0.985 0.002 247.839);
+  --color-gray-100: oklch(0.967 0.003 264.542);
+  --color-gray-200: oklch(0.928 0.006 264.531);
+  --color-gray-300: oklch(0.872 0.01 258.338);
+  --color-gray-400: oklch(0.707 0.022 261.325);
+  --color-gray-500: oklch(0.551 0.027 264.364);
+  --color-gray-600: oklch(0.446 0.03 256.802);
+  --color-gray-700: oklch(0.373 0.034 259.733);
+  --color-gray-800: oklch(0.278 0.033 256.848);
+  --color-gray-900: oklch(0.21 0.034 264.665);
+  --color-gray-950: oklch(0.13 0.028 261.692);
+
+  --line-height-11: 2.75rem;
+  --line-height-12: 3rem;
+  --line-height-13: 3.25rem;
+  --line-height-14: 3.5rem;
+
+  --z-60: 60;
+  --z-70: 70;
+  --z-80: 80;
+}
+
+@layer base {
+  /* Tailwind v4 defaults the border color to currentColor; the site pins it to gray-200. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    background-color: #fff;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dark body {
+    background-color: var(--color-gray-950);
+    color: #fff;
+  }
+
+  a,
+  button {
+    outline-color: var(--color-primary-500);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid;
+    border-radius: var(--radius-sm);
+    outline-color: var(--color-primary-500);
+  }
+}
