@@ -13,10 +13,12 @@ if ! git rev-parse --verify --quiet "$base" >/dev/null; then
 fi
 
 # 1. Path allowlist: a blog branch may only add/change blog MDX, blog images,
-#    docs, and this skill itself.
+#    docs, this skill itself, and the two generated/site-data files a post
+#    legitimately updates (tag counts, and the projects list when a post
+#    introduces a project).
 while IFS= read -r f; do
   case "$f" in
-    data/blog/*.mdx | public/static/images/* | docs/* | .claude/skills/write-blog/* | app/tag-data.json) ;;
+    data/blog/*.mdx | public/static/images/* | docs/* | .claude/skills/write-blog/* | app/tag-data.json | data/projectsData.ts) ;;
     *)
       echo "FAIL: unexpected file in diff: $f"
       fail=1
