@@ -2,7 +2,7 @@
   "claude-code": 1,
   "github": 1,
   "ai-agents": 1,
-  "productivity": 3,
+  "productivity": 4,
   "govcon": 1,
   "linux": 1,
   "csv": 1,
@@ -16,10 +16,13 @@
   "software-architecture": 1,
   "postgres": 1,
   "cloudflare-workers": 1,
-  "rust": 1,
+  "rust": 2,
   "system-design": 1,
   "tailscale": 1,
   "termux": 1,
   "ssh": 1,
-  "swarmforge": 1
+  "swarmforge": 1,
+  "trellis": 1,
+  "sqlite": 1,
+  "open-source": 1
 }

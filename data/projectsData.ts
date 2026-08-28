@@ -7,6 +7,11 @@ interface Project {
 
 const projectsData: Project[] = [
   {
+    title: 'Trellis',
+    description: `A single-user scheduling assistant built around capturing a thought immediately and triaging it later`,
+    href: 'https://github.com/garrell-tech-solutions/trellis',
+  },
+  {
     title: 'Open Source Predictive Dialer',
     description: `Join my journey learning predictive dialers by building one`,
     imgSrc: '/static/images/gts-dialer.png',
