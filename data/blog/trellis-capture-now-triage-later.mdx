@@ -7,99 +7,143 @@ draft: false
 summary: Saving a thought in Trellis is immediate and takes no decisions; sorting it happens later. Here's the friction behind that split, and what shipped.
 ---
 
-[Trellis](https://github.com/garrell-tech-solutions/trellis) is a single-user scheduling assistant I built for one reason: opening it and saving a thought should be immediate and take no decisions. You type into a box, it is stored, and you decide later whether that thought is a task with a deadline, an errand to do when you happen to be somewhere, or hours against a weekly goal. Capture now, triage later. That split is the whole point, because deciding what a note _is_ at the moment I want to write it down is the biggest friction I hit with the note-taking apps I used before. Everything else Trellis does is useful, but secondary.
+[Trellis](https://github.com/garrell-tech-solutions/trellis) is a single-user scheduling assistant I built for one reason: opening it and saving a thought should be immediate and take no decisions. You type into a box, it is stored, and you decide later what it was. Capture now, triage later. Having to decide what a note _is_ before I can write it down is the biggest friction I hit with the note-taking apps I used before, and everything else here is secondary to fixing it.
 
 ## What friction was I actually trying to fix?
 
-A thought shows up when you are doing something else. You are in a checkout line, or halfway through a meeting, or walking back to the car. The phone comes out, and if the app wants to know which notebook, list, project, or label the thought belongs to before it will keep it, you are now doing two things: remembering the thought and classifying it. The classification is the part that fails. Either it gets a wrong bucket nobody opens again, or it does not get written down at all.
+A thought shows up while you are doing something else: a checkout line, a meeting, walking back to the car. If the app wants a notebook, list, project, or label before it will keep the thought, you are doing two jobs at once, and the classifying is the one that fails:
 
-So the capture path in Trellis has one job and a budget. The decision log keeps a **50 ms** wall-clock budget on capture as a stated design constraint, asserted by the QA suite against a real server on a quiet machine, never in a unit or acceptance test ([`T-latency-is-a-qa-assertion`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)). And Trellis is installable as a web app, so it opens from the home screen in its own window with no address bar and its own entry in the app switcher, which shipped as [issue #112](https://github.com/garrell-tech-solutions/trellis/issues/112) on 2026-08-24. Tap the icon, type, done.
+- It lands in a wrong bucket nobody opens again.
+- Or it never gets written down.
+
+So the capture path gets two rules:
+
+- **A budget.** The decision log holds capture to **50 ms**, asserted by the QA suite against a real server on a quiet machine, never in a unit or acceptance test ([`T-latency-is-a-qa-assertion`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)).
+- **No browser in the way.** Trellis installs as a web app: home screen icon, its own window, no address bar, its own entry in the app switcher. That shipped as [issue #112](https://github.com/garrell-tech-solutions/trellis/issues/112) on 2026-08-24.
+
+## What does the capture screen actually look like?
+
+_Both screenshots below show a demo database I seeded to write this post, not my real captures._
+
+<Image
+  src="/static/images/trellis-capture-screen.png"
+  alt="The Trellis capture screen at phone width: a quick-add box reading 'What just came to mind' above a Recent list, where untriaged rows carry Pool, Committed and Quota buttons and already-triaged rows are restyled to show what they became."
+  width={780}
+  height={1874}
+/>
+
+A quick-add box and a `Recent` list. The hint under the box says the rest: _Sorting can wait._
+
+- **Untriaged rows** carry their controls inline: a tag field and `Pool`, `Committed`, `Quota`.
+- **Triaged rows stay put**, restyled, reading what they became (`POOL · @OFFICE`), so you never leave the page to confirm it worked.
+
+What is missing is a third section. Below `Recent` there used to be a `Tasks` list holding every triaged task in the database, a leftover from an early slice when triage needed proof it had written something. [Issue #140](https://github.com/garrell-tech-solutions/trellis/issues/140) cut it, from my own note: "we don't need to list the tasks on the capture page. it should just be insert and triage."
+
+Cutting it left the page with no feedback at all: you tap `Pool` and the row just vanishes. The restyled row is the answer to that, and both halves shipped in the same slice.
 
 ## What does "capture now, triage later" mean in practice?
 
-It means a capture is stored as soon as you submit it, and nothing classifies it. Triage is fully manual, deliberately, until a language-model implementation lands much later ([`D-manual-triage-until-llm`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md), settled 2026-08-17). No pre-filled guess to accept without reading.
+A capture is stored as soon as you submit it, and nothing classifies it. Triage is manual by decision until a language-model implementation lands much later ([`D-manual-triage-until-llm`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md), settled 2026-08-17). No pre-filled guess to accept without reading.
 
-When you do triage it, you send the capture to one of three places: **pool**, **committed**, or a **quota**. Pool is the default and committed is the exception, because a calendar you trust is one where a block exists only because it had to. Filing into a quota now creates the quota itself instead of parking a quota-flavored task in the task table, which is what [issue #138](https://github.com/garrell-tech-solutions/trellis/issues/138) closed on 2026-08-26.
+When you do triage, it goes to one of three places:
 
-Captures also carry a free-text context tag that autocompletes on prior values, and those tags are the product's only taxonomy: numerous, cheap, disposable. They replaced an earlier life-area model, which answered what part of my life a task belonged to, a reporting question. The win I named in the log was batching by location, not finding a time slot: "much of my pool is errands attached to places." A tag like `@homedepot` groups work by where it can be done, which is what makes a pool item actionable when you are already standing there. That decision also shipped early on purpose, because a tag cannot be backfilled ([`D-context-tags-are-the-taxonomy`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)). Every day of capture before it was a day of data I can never group.
+- **Pool**, the default: errands, grouped by where you would do them.
+- **Committed**, the exception, because a calendar you trust is one where a block exists only because it had to.
+- **A quota**, for recurring hours. Filing into one creates the quota itself rather than parking a quota-flavored task in the task table, which is what [issue #138](https://github.com/garrell-tech-solutions/trellis/issues/138) closed on 2026-08-26.
 
-## What does the capture screen look like today?
+Captures also carry a free-text context tag, autocompleting on prior values ([`D-context-tags-are-the-taxonomy`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)):
 
-As of 2026-08-27 it is a box and a `Recent` list, and nothing else. It used to also render every task in the database at the bottom, a leftover from an early slice when triage needed some proof it had written something and there was nowhere else to look. [Issue #140](https://github.com/garrell-tech-solutions/trellis/issues/140) removed it, from my own note: "we don't need to list the tasks on the capture page. it should just be insert and triage."
-
-The part that took the thought was the feedback problem. Delete the list and triaging a capture makes the row vanish with nothing saying where it went. So a triaged row now stays in `Recent`, restyled, reading what it became. Type "buy screws", tap `Pool`, give it `@homedepot`, and the row stays put telling you it worked. You never leave the page.
+- Tags are the only taxonomy: numerous, cheap, disposable.
+- They replaced a life-area model that asked what part of my life a task belonged to, a reporting question.
+- The win I named in the log was batching by location, not finding a time slot: "much of my pool is errands attached to places."
+- They shipped early because a tag cannot be backfilled.
 
 ## Which approach to quick capture fits which problem?
 
-Here is how I would characterize the options:
+How I would characterize the options:
 
-| Approach                                              | Decision at capture | Decision later                     | Risk it carries                                                        |
-| ----------------------------------------------------- | ------------------- | ---------------------------------- | ---------------------------------------------------------------------- |
-| File on the way in (pick a notebook or project first) | Where does this go? | None, in theory                    | The filing decision competes with the thought, so capture gets skipped |
-| One flat inbox, no triage step                        | None                | None                               | Nothing consumes the inbox and it becomes a graveyard                  |
-| Auto-schedule everything                              | None                | None, the tool decides             | Blocks you did not choose lose the calendar's credibility              |
-| Capture, then triage (Trellis)                        | None                | Kind, tag, and date, on your terms | You have to actually come back and triage                              |
+| Approach                       | Decision at capture | Decision later   | Risk it carries                                           |
+| ------------------------------ | ------------------- | ---------------- | --------------------------------------------------------- |
+| File on the way in             | Where does this go? | None, in theory  | Filing competes with the thought, so capture is skipped   |
+| One flat inbox, no triage step | None                | None             | Nothing consumes the inbox and it becomes a graveyard     |
+| Auto-schedule everything       | None                | The tool decides | Blocks you did not choose lose the calendar's credibility |
+| Capture, then triage           | None                | Kind, tag, date  | You have to actually come back and triage                 |
 
-The last row's risk is real, and it is the one this design accepts in exchange for the other three.
+That last risk is what this design accepts in exchange for the other three.
 
 ## What happens after triage?
 
-Trellis has four screens in a bottom tab bar: `Capture`, `Pool`, `Quota`, and `Committed` ([`D-four-screens`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)).
+<Image
+  src="/static/images/trellis-pool-committed-quota.png"
+  alt="The Pool, Committed and Quota screens side by side. Pool groups three @homedepot items under 'Worth a trip' with a single loose end tagged @supermarket. Committed shows one item at a fixed time and one with a 'by' date. Quota shows piano practice at 1h 30m of a 3h weekly target with quick-log buttons."
+  width={2340}
+  height={1120}
+/>
 
-**Pool** is the errand list, grouped by context tag. Three or more open items on the same tag form a _trip_, ordered by size, with no priority control for you to set. Once a tag has formed one it stays a trip until nothing is left open on it, so checking items off while you are out does not dismantle the list you are working from.
+Three more screens, in a bottom tab bar alongside `Capture` ([`D-four-screens`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)):
 
-**Quota** is the goal-oriented screen. A quota has a name and a weekly hour target, and logging against it is retrospective: quick taps for +30m and +1h plus arbitrary durations, no start/stop timer. Counters reset Monday and shortfalls never carry forward ([`D-logging-is-retrospective-and-separate`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)), so a missed week is missed rather than turning into debt ([`D-quota-no-rollover`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)).
-
-**Committed** holds things with a time on them, and every committed item is either an _at_ or a _by_. An at is a fixed block, 2pm dentist, placed where it says. A by is a deadline with slack in front of it. They display differently and behave differently.
+- **Pool** groups errands by tag. Three or more open items on one tag form a _trip_, ordered by size, with no priority control to set. Fewer than three fall into loose ends. Once formed, a trip stays one until nothing is left open on it, so checking things off while you are out does not dismantle the list you are working from.
+- **Committed** holds things with a time on them. Every item is either an _at_ (a fixed block, `WED 14:00`) or a _by_ (a deadline with slack in front of it, `BY 5 SEP`). They display differently and behave differently.
+- **Quota** tracks recurring hours against a weekly target. Logging is retrospective: `+30m`, `+1h`, or an arbitrary duration, no start/stop timer. Counters reset Monday and shortfalls never carry forward ([`D-logging-is-retrospective-and-separate`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)), so a missed week is missed rather than turning into debt ([`D-quota-no-rollover`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md)).
 
 ## What did dogfooding change that planning did not?
 
-More than any review did. On 2026-08-20, after 187 commits and still no daily use, I re-planned the whole project around getting myself onto it every day, with a target date of 2026-09-03. The note in the log is blunt: "Capture works; nothing consumes what I capture. Every open milestone builds machinery for a plan I can't yet see." Six pages existed, four of them read-only instruments feeding a solver that did not exist. That solver is now paused behind an evidence bar rather than cancelled, and the bar has two halves: two weeks of real use, plus my being able to name the friction automatic placement would remove. The log puts it shorter: "If I can't name it, we don't build it."
+More than any review did. On 2026-08-20, after 187 commits and still no daily use, I re-planned the whole project around using it every day:
 
-Then the evidence arrived faster than the plan did. In the two days after Trellis became reachable on a phone (over a tailnet; I have written separately about [using Tailscale to work from my phone](/blog/tailscale-swarmforge-on-the-go)), real use turned up four defects that every gate and every review had passed:
+- **The target.** Daily use by 2026-09-03.
+- **The reason,** from the log: "Capture works; nothing consumes what I capture. Every open milestone builds machinery for a plan I can't yet see."
+- **The state.** Six pages, four of them read-only instruments feeding a solver that did not exist.
+- **The new bar** for building that solver: two weeks of real use, plus my being able to name the friction automatic placement would remove. Or shorter: "If I can't name it, we don't build it."
 
-- [#101](https://github.com/garrell-tech-solutions/trellis/issues/101), scroll dead on touch, which was present in three shipped slices and flagged in all three pull request bodies without being fixed
+Then the evidence beat the plan. In the two days after Trellis became reachable on a phone (over a tailnet; I have written separately about [using Tailscale to work from my phone](/blog/tailscale-swarmforge-on-the-go)), real use turned up four defects that every gate and every review had passed:
+
+- [#101](https://github.com/garrell-tech-solutions/trellis/issues/101), scroll dead on touch, present in three shipped slices and flagged in all three pull request bodies without being fixed
 - [#110](https://github.com/garrell-tech-solutions/trellis/issues/110), committing a task meant typing a UTC timestamp by hand
 - [#119](https://github.com/garrell-tech-solutions/trellis/issues/119), every triage disclosure opening at once
 - [#122](https://github.com/garrell-tech-solutions/trellis/issues/122), working a trip destroyed it
 
-That last one is my favorite example of why using the thing matters. You are standing in Home Depot with five items tagged `@homedepot`. You check off the third, the group drops below the trip threshold, the panel dissolves, and the last two scatter into loose ends, mid-shop. The screen destroyed the list at the exact moment it was being used for its only purpose. No test could see that, because the test does not go shopping. It closed on 2026-08-24, and trips have persisted through being worked since the slice that landed the following day.
+That last one is my favorite. You were in Home Depot with five items tagged `@homedepot`. You checked off the third, the group dropped below the trip threshold, the panel dissolved, and the last two scattered into loose ends, mid-shop. The screen destroyed the list at the moment it was being used for its only purpose. No test could see that, because the test does not go shopping. It closed on 2026-08-24, and trips have persisted through being worked since the slice that landed the next day.
 
-So daily use became the standing rule for what gets built next, not a one-time re-plan ([`D-dogfooding-drives-the-roadmap`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md), 2026-08-23). A milestone has to be justified by friction I can name from using the product. It pairs with a companion rule in the same log, that every slice has to end in something I can start the app and watch happen, which is recorded there as my professional standard with clients rather than a preference about this project. That is the same delivery discipline behind the [system-design and platform work I do at Garrell Tech Solutions](https://garrellts.com), and a close relative of the [one-owner-per-rule architecture](/blog/one-owner-per-rule-architecture) approach: make the standard specific enough that nobody has to argue about it.
+So daily use became the standing rule for what gets built next ([`D-dogfooding-drives-the-roadmap`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md), 2026-08-23). It pairs with an older rule there: every slice ends in something I can start the app and watch happen, recorded as my professional standard with clients rather than a preference about this project.
+
+That is the same delivery discipline behind the [system-design and platform work I do at Garrell Tech Solutions](https://garrellts.com), and a relative of the [one-owner-per-rule architecture](/blog/one-owner-per-rule-architecture) approach: make the standard specific enough that nobody has to argue about it.
 
 ## What is Trellis built on?
 
-Rust and SQLite, and not much else. The scheduling core is pure interval arithmetic over sum types with no I/O and no `tokio` dependency, enforced in CI, which is what makes it property-testable. Storage is a single SQLite file in WAL mode through `sqlx`. The shipping artifact is a static musl binary plus that one file. Every push to trunk publishes a release tagged by commit date and run number, currently `v2026.08.27.210`, and no version is ever bumped by hand.
+Rust and SQLite, and not much else.
 
-It is single-tenant on purpose, and that is deferred rather than refused: "Not a never; right now I want single tenancy because I'm the only tenant." The direction chosen on 2026-08-25 is offline-first in the browser, a SQLite database in OPFS that the browser owns, with optional sign-in to reach it from another device. That is a direction, not a schedule. It is not designed yet.
+- **Core.** Pure interval arithmetic over sum types. No I/O, no `tokio`, enforced in CI, which is what keeps it property-testable.
+- **Storage.** One SQLite file in WAL mode through `sqlx`.
+- **Artifact.** A static musl binary plus that file.
+- **Releases.** Every push to trunk publishes one tagged by commit date and run number, currently `v2026.08.27.210`. No version is bumped by hand.
+- **Tenancy.** Single tenant, deferred rather than refused: "Not a never; right now I want single tenancy because I'm the only tenant."
+- **Next.** Offline-first in the browser, a SQLite database in OPFS the browser owns, with optional sign-in to reach it from another device. Chosen 2026-08-25. A direction, not a schedule, and not designed yet.
 
-The repo is public under MIT, and it is also listed on [my projects page](/projects).
+Public under MIT, and listed on [my projects page](/projects).
 
 ## FAQ
 
 **Can I run Trellis myself?**
-Yes. It is [MIT-licensed and public](https://github.com/garrell-tech-solutions/trellis). Build it with `cargo build`, then `cargo run -p trellis-server -- serve --db trellis.db` and open `http://localhost:8080`. Migrations run automatically on startup, so a database path that does not exist yet is created and migrated with no separate setup step.
+Yes. `cargo build`, then `cargo run -p trellis-server -- serve --db trellis.db`, then open `http://localhost:8080`. Migrations run on startup, so a database path that does not exist yet is created and migrated.
 
 **Does Trellis schedule my tasks for me?**
-Not today. The `scheduler-core` crate is in the tree, but the milestone that would put it to work is paused behind an evidence bar: two weeks of real use, plus me being able to name the friction automatic placement would actually remove. Automatically promoting an aging pool task onto the calendar is explicitly rejected, because a block you did not choose is a block you learn to ignore.
+Not today. The `scheduler-core` crate is in the tree, but the milestone that would put it to work is paused. Automatically promoting an aging pool task onto the calendar is explicitly rejected: a block you did not choose is a block you learn to ignore.
 
 **Does anything classify a capture automatically?**
-No. Triage is fully manual by decision, until a language-model implementation lands at a much later milestone. The reasoning recorded in the log is that a wrong pre-fill gets accepted silently, while a blank field gets filled deliberately.
+No, by decision, until a language-model implementation lands at a much later milestone. A wrong pre-fill gets accepted silently; a blank field gets filled deliberately.
 
 **Does it work offline?**
-Not yet. Trellis is installable as a web app, so it opens like a native app from the home screen, but an installed app that cannot reach the server shows nothing. A service worker was ruled out at the time, and the pull request had to say so rather than leave it looking forgotten: the data is entirely server-side, so caching the app shell would just wrap an empty screen in a frame. Offline is the current direction, unscheduled.
-
-**Is it multi-user?**
-No, and that is a design decision, not an incomplete feature. Single user, single tenant. Multi-tenancy, accounts, and auth are recorded as deferred, not refused.
+Not yet. It installs like a native app, but the data is entirely server-side, so caching the shell would wrap an empty screen in a frame. A service worker was ruled out at the time, deliberately. Offline is the current direction, unscheduled.
 
 **Why a decision log instead of just issues?**
-Because the expensive thing is re-deriving a call you already made. `docs/decisions.md` is append-only and records settled product and technical decisions along with rejected alternatives and why, so an argument that already lost does not get relitigated for free.
+Because the expensive thing is re-deriving a call you already made. `docs/decisions.md` is append-only and records settled decisions with rejected alternatives and why, so an argument that already lost does not come back for free.
 
 ## Sources
 
 - [garrell-tech-solutions/trellis](https://github.com/garrell-tech-solutions/trellis) (README, MIT license, repository metadata), accessed 2026-08-27
 - [`docs/decisions.md`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/decisions.md), the project's append-only decision log, accessed 2026-08-27
 - [`docs/plans/2026-08-23-installable-brief.md`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/plans/2026-08-23-installable-brief.md), accessed 2026-08-27
-- [`docs/plans/2026-08-27-capture-is-triage-only-brief.md`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/plans/2026-08-27-capture-is-triage-only-brief.md), accessed 2026-08-27
 - [`docs/plans/2026-08-26-quota-filing-brief.md`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/plans/2026-08-26-quota-filing-brief.md), accessed 2026-08-27
+- [`docs/plans/2026-08-27-capture-is-triage-only-brief.md`](https://github.com/garrell-tech-solutions/trellis/blob/trunk/docs/plans/2026-08-27-capture-is-triage-only-brief.md), accessed 2026-08-27
 - Issues [#101](https://github.com/garrell-tech-solutions/trellis/issues/101), [#110](https://github.com/garrell-tech-solutions/trellis/issues/110), [#112](https://github.com/garrell-tech-solutions/trellis/issues/112), [#119](https://github.com/garrell-tech-solutions/trellis/issues/119), [#122](https://github.com/garrell-tech-solutions/trellis/issues/122), [#138](https://github.com/garrell-tech-solutions/trellis/issues/138), [#140](https://github.com/garrell-tech-solutions/trellis/issues/140), accessed 2026-08-27
+- Screenshots taken 2026-08-27 from `trellis-server` built at the repo's current trunk, running locally against a seeded demo database
